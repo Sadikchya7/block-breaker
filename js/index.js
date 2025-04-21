@@ -4,6 +4,7 @@ firstDiv.height = window.innerHeight;
 
 var gameDiv = document.getElementById("content");
 gameDiv.width = 500;
+console.log(gameDiv.width);
 gameDiv.height = 600;
 
 var ctx = gameDiv.getContext("2d");
@@ -16,9 +17,10 @@ class Game {
     this.height = height;
     this.width = width;
     this.container = container;
-    this.ball = new Ball(30, "black", 2, this.width, this.height);
+    this.ball = new Ball(30, "black", 2, this.width, this.height, this.paddle);
     this.level = new Level(levels[this.currentLevel]);
-    this.paddle = new Paddle("darkgrey", 20, 200, this.ball);
+    this.paddle = new Paddle("darkgrey", 20, 100, this.ball);
+    this.ball.attachToPaddle(this.paddle);
     this.playing = false;
     this.initControls();
   }
@@ -54,17 +56,20 @@ class Game {
     ctx.fill();
   }
   update() {
-    if (this.state === "pause") {
-      return;
+    if (this.state === "pause") return;
+
+    if (this.playing) {
+      this.ball.move();
+      this.ball.checkCollisionWithWall(this.width, this.height);
+      for (let i = 0; i < this.level.bricks.length; i++) {
+        this.ball.checkCollisionWithBricks(this.level.bricks[i]);
+      }
+      this.ball.checkCollisionWithPaddle(this.paddle);
     }
-    this.ball.move();
-    this.ball.checkCollisionWithWall(this.width, this.height);
-    for (let i = 0; i < this.level.bricks.length; i++) {
-      this.ball.checkCollisionWithBricks(this.level.bricks[i]);
-    }
-    this.ball.checkCollisionWithPaddle(this.paddle);
-    this.paddle.update(this.width);
+
+    this.drawPaddle();
   }
+
   updateView() {
     ctx.clearRect(0, 0, this.width, this.height);
     if (this.state === "mainScreen") {
@@ -88,6 +93,7 @@ class Game {
   }
   drawPaddle() {
     this.paddle.draw();
+    this.paddle.update(this.width);
   }
 }
 
@@ -96,24 +102,30 @@ class Ball {
     this.radius = radius;
     this.color = color;
     this.speed = speed;
-    this.x = gameWidth / 2;
-    this.y = gameHeight / 2;
+    this.x = gameWidth - this.radius * 2;
+    this.y = gameHeight - this.radius - 20;
     this.dx = speed;
     this.dy = -speed;
-    // this.x = gameWidth - this.radius - 10;
-    // this.y = gameHeight - this.radius - 10;
-    // this.dx = 2 * speed - speed;
-    // this.dy = 2 * speed - speed;
+    this.attached = true;
   }
+
   draw() {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, 360);
     ctx.fillStyle = this.color;
     ctx.fill();
   }
+
   move() {
-    this.x += this.dx;
-    this.y += this.dy;
+    if (!this.attached) {
+      this.x += this.dx;
+      this.y += this.dy;
+    }
+  }
+
+  attachToPaddle(paddle) {
+    this.x = paddle.x + paddle.width / 2;
+    this.y = paddle.y - this.radius - 3;
   }
 
   checkCollisionWithWall(gameWidth, gameHeight) {
@@ -136,17 +148,17 @@ class Ball {
     if (!brick.show) return;
 
     if (
-      this.x + this.radius > brick.x && //ballright and brickleft
-      this.x - this.radius < brick.x + brick.width && //ball left and brick right
-      this.y + this.radius > brick.y && //ball bottom and brick top
-      this.y - this.radius < brick.y + brick.height //ball top and brick bottom
+      this.x + this.radius > brick.x &&
+      this.x - this.radius < brick.x + brick.width &&
+      this.y + this.radius > brick.y &&
+      this.y - this.radius < brick.y + brick.height
     ) {
       this.dy = -this.dy;
       brick.show = false;
     }
   }
+
   checkCollisionWithPaddle(paddle) {
-    // console.log(paddle.x);
     if (
       this.x + this.radius > paddle.x &&
       this.x - this.radius < paddle.x + paddle.width &&
@@ -154,7 +166,47 @@ class Ball {
       this.y - this.radius < paddle.y + paddle.height
     ) {
       this.dy = -1 * this.dy;
-      // console.log(this.dy);
+    }
+  }
+}
+
+class Paddle {
+  constructor(color, height, width, ball) {
+    this.color = color;
+    this.height = height;
+    this.width = width;
+    this.ball = ball;
+    this.x = ball.x - width / 2;
+    this.y = ball.y + height + 8;
+    this.dx = 0;
+    this.speed = 5;
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.fillStyle = this.color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+    ctx.strokeStyle = "grey";
+    ctx.lineWidth = 5;
+    ctx.strokeRect(this.x, this.y, this.width, this.height);
+  }
+
+  update(gameWidth) {
+    if (this.x < 0) this.x = 0;
+    if (this.x + this.width > gameWidth) this.x = gameWidth - this.width;
+  }
+
+  moveRight() {
+    this.x += this.speed;
+    if (this.ball.attached) {
+      this.ball.attachToPaddle(this);
+    }
+  }
+
+  moveLeft() {
+    this.x -= this.speed;
+    if (this.ball.attached) {
+      this.ball.attachToPaddle(this);
     }
   }
 }
@@ -194,42 +246,6 @@ class Level {
       bricks.push(new Brick(data.height, data.width, data.x, data.y));
     }
     return bricks;
-  }
-}
-class Paddle {
-  constructor(color, height, width, ball) {
-    this.color = color;
-    this.height = height;
-    this.width = width;
-    this.x = ball.x - width / 2;
-    this.y = ball.y + 100;
-    this.dx = 0;
-    this.speed = 5;
-  }
-
-  draw() {
-    ctx.beginPath();
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-    ctx.strokeStyle = "grey";
-    ctx.lineWidth = 5;
-    ctx.strokeRect(this.x, this.y, this.width, this.height);
-  }
-
-  update(gameWidth) {
-    // this.x += this.dx;
-    if (this.x < 0) this.x = 0;
-    if (this.x + this.width > gameWidth) this.x = gameWidth - this.width;
-  }
-
-  moveRight() {
-    // this.dx = this.speed;
-    this.x += this.speed;
-  }
-
-  moveLeft() {
-    // this.dx = -this.speed;
-    this.x -= this.speed;
   }
 }
 
@@ -284,18 +300,21 @@ loadLevel = (i) => {
   game.nextLevel();
   game.updateView();
 };
-
 gameLoop = () => {
-  game.update();
+  game.update(); // ball won't move if not playing
   game.updateView();
 
-  const allBricksCleared = game.level.bricks.every((brick) => !brick.show);
-  if (allBricksCleared) {
-    cancelAnimationFrame(gameID);
-    gameID = null;
-    game.playing = false;
-    alert("LEVEL CLEARED!");
-    return;
+  game.drawPaddle(); // already handled in updateView
+
+  if (game.playing) {
+    const allBricksCleared = game.level.bricks.every((brick) => !brick.show);
+    if (allBricksCleared) {
+      cancelAnimationFrame(gameID);
+      gameID = null;
+      game.playing = false;
+      alert("LEVEL CLEARED!");
+      return;
+    }
   }
 
   gameID = requestAnimationFrame(gameLoop);
@@ -303,6 +322,7 @@ gameLoop = () => {
 
 startButton.addEventListener("click", () => {
   if (!game.playing) {
+    game.ball.attached = false;
     game.playing = true;
     gameID = requestAnimationFrame(gameLoop);
   }
@@ -312,10 +332,19 @@ resetButton.addEventListener("click", () => {
   cancelAnimationFrame(gameID);
   gameID = null;
   game.playing = false;
-  loadLevel(currentLevel);
+
+  game = new Game(gameDiv, "pink", 600, 500);
+  game.currentLevel = currentLevel;
+  game.level = new Level(levels[currentLevel]);
+  game.ball.attached = true;
+  game.ball.attachToPaddle(game.paddle);
+  game.updateView();
 });
 
 nextButton.addEventListener("click", () => {
+  game.ball.attached = true;
+  game.ball.attachToPaddle(game.paddle);
+
   if (currentLevel < levels.length - 1) {
     currentLevel++;
     cancelAnimationFrame(gameID);
@@ -326,4 +355,4 @@ nextButton.addEventListener("click", () => {
     alert("🎉 You finished all levels!");
   }
 });
-game.updateView();
+gameLoop();

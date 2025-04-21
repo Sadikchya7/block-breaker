@@ -1,10 +1,10 @@
-#content {
+body {
   margin-left: 35%;
 }
 .buttonDiv {
   display: flex;
   justify-content: space-between;
-  margin-left: 35%;
+  /* margin-left: 35%; */
 }
 button {
   height: 40px;
