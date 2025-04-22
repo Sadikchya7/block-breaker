@@ -12,14 +12,14 @@ class Game {
     this.drawn = false;
 
     const level1 = [
-      { height: 50, width: 100, x: 20, y: 4 },
-      { height: 50, width: 100, x: 130, y: 4 },
-      { height: 50, width: 100, x: 240, y: 4 },
+      { height: 50, width: 100, x: 20, y: 58 },
+      { height: 50, width: 100, x: 130, y: 58 },
+      { height: 50, width: 100, x: 240, y: 58 },
     ];
     const level2 = [
-      { height: 50, width: 100, x: 4, y: 4 },
-      { height: 50, width: 100, x: 110, y: 50 },
-      { height: 50, width: 100, x: 220, y: 4 },
+      { height: 50, width: 100, x: 4, y: 58 },
+      { height: 50, width: 100, x: 110, y: 100 },
+      { height: 50, width: 100, x: 220, y: 58 },
     ];
     this.levels = [level1, level2];
 
@@ -46,8 +46,31 @@ class Game {
         ) {
           this.state = "playing_1";
         }
-      } else if (this.state === "playing_1") {
-        this.state = "start";
+      }
+
+      if (this.state === "playing_1") {
+        if (
+          this.startbutton && // Check if startbutton is defined
+          x > this.startbutton.x &&
+          x < this.startbutton.x + this.startbutton.width &&
+          y > this.startbutton.y &&
+          y < this.startbutton.y + this.startbutton.height
+        ) {
+          this.state = "start";
+        }
+      }
+      if (
+        this.pausebutton &&
+        x > this.pausebutton.x &&
+        x < this.pausebutton.x + this.pausebutton.width &&
+        y > this.pausebutton.y &&
+        y < this.pausebutton.y + this.pausebutton.height
+      ) {
+        if (this.state === "pause") {
+          this.state = "start"; // Resume game
+        } else {
+          this.state = "pause"; // Pause the game
+        }
       }
     });
 
@@ -116,7 +139,9 @@ class Game {
   }
 
   update() {
-    if (this.state === "pause") return;
+    if (this.state === "pause") {
+      return;
+    }
     if (this.state === "start") {
       this.ball.attached = false;
       this.ball.move();
@@ -127,7 +152,8 @@ class Game {
       }
       this.ball.checkCollisionWithPaddle(this.paddle);
     }
-
+    this.startButton();
+    this.pauseButton();
     this.paddle.update(this.width);
   }
 
@@ -137,13 +163,30 @@ class Game {
     this.draw();
     this.paddle.draw();
     this.ball.draw();
+    this.startButton();
+    this.pauseButton();
     this.level.bricks.forEach((brick) => brick.draw());
+    if (this.state === "pause") {
+      // Display a paused message
+      this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+      this.ctx.fillRect(0, 0, this.width, this.height); // Semi-transparent overlay
+      this.ctx.fillStyle = "white";
+      this.ctx.font = "50px Arial";
+      this.ctx.textAlign = "center";
+      this.ctx.textBaseline = "middle";
+      this.ctx.fillText("PAUSED", this.width / 2, this.height / 2);
+    }
   }
 
   draw() {
     this.ctx.beginPath();
     this.ctx.rect(0, 0, this.width, this.height);
     this.ctx.fillStyle = this.Bgcolor;
+    this.ctx.fill();
+
+    this.ctx.beginPath();
+    this.ctx.rect(0, 0, this.width, 55);
+    this.ctx.fillStyle = "darkred";
     this.ctx.fill();
   }
 
@@ -155,6 +198,7 @@ class Game {
       this.levelComplete();
       this.nextLevel();
     }
+    this.buttons();
   }
 
   startGame() {
@@ -164,8 +208,52 @@ class Game {
   gameStartPage() {
     this.startGame();
   }
+  startButton(x = 7.5, y = 7.5) {
+    const text = "Start";
+    const boxWidth = 100;
+    const boxHeight = 40;
 
-  buttons() {
-    // Reserved for UI button setup if needed later
+    this.startbutton = {
+      x: x,
+      y: y,
+      width: boxWidth,
+      height: boxHeight,
+    };
+
+    this.ctx.fillStyle = "ivory";
+    this.ctx.fillRect(x, y, boxWidth, boxHeight);
+
+    this.ctx.fillStyle = "black";
+    this.ctx.font = "20px Verdana";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+
+    const textX = x + boxWidth / 2;
+    const textY = y + boxHeight / 2;
+    this.ctx.fillText(text, textX, textY);
+  }
+  pauseButton(x = 117.5, y = 7.5) {
+    const text = "Pause";
+    const boxWidth = 100;
+    const boxHeight = 40;
+
+    this.pausebutton = {
+      x: x,
+      y: y,
+      width: boxWidth,
+      height: boxHeight,
+    };
+
+    this.ctx.fillStyle = "ivory";
+    this.ctx.fillRect(x, y, boxWidth, boxHeight);
+
+    this.ctx.fillStyle = "black";
+    this.ctx.font = "20px Verdana";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+
+    const textX = x + boxWidth / 2;
+    const textY = y + boxHeight / 2;
+    this.ctx.fillText(text, textX, textY);
   }
 }

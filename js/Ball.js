@@ -35,7 +35,7 @@ class Ball {
     if (this.x + this.radius > gameWidth || this.x - this.radius < 0) {
       this.dx = -this.dx;
     }
-    if (this.y - this.radius < 0) {
+    if (this.y - this.radius < 55) {
       this.dy = -this.dy;
     }
     if (this.y + this.radius > gameHeight) {
@@ -66,6 +66,7 @@ class Ball {
       brick.show = false;
     }
   }
+
   checkCollisionWithPaddle(paddle) {
     if (
       this.x + this.radius > paddle.x &&
