@@ -20,7 +20,7 @@ class Ball {
 
   move() {
     // debugger;
-    console.log(this.attached, "moving");
+    // console.log(this.attached, "moving");
     // this.attached = false;
     if (!this.attached) {
       this.x += this.dx;
@@ -31,7 +31,7 @@ class Ball {
     this.x = paddle.x + paddle.width / 2;
     this.y = paddle.y - this.radius - 3;
   }
-  checkCollisionWithWall(gameWidth, gameHeight) {
+  checkCollisionWithWall(gameWidth, gameHeight, paddle) {
     if (this.x + this.radius > gameWidth || this.x - this.radius < 0) {
       this.dx = -this.dx;
     }
@@ -40,16 +40,13 @@ class Ball {
     }
     if (this.y + this.radius > gameHeight) {
       game.gameOver();
-      this.reset(gameWidth, gameHeight);
-      cancelAnimationFrame(gameID);
-      gameID = null;
-      game.playing = false;
     }
   }
 
-  reset(gameWidth, gameHeight) {
-    this.x = gameWidth / 2;
-    this.y = gameHeight - this.radius - 20;
+  reset(paddle) {
+    // debugger;
+    this.x = paddle.x + paddle.width / 2;
+    this.y = paddle.y - this.radius - 3;
     this.attached = true;
   }
 
