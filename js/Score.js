@@ -1,46 +1,58 @@
 class Score {
-  constructor(height, width, bricks, ctx) {
+  constructor(height, width, bricks, ctx, gameWidth) {
     this.height = height;
     this.width = width;
     this.bricks = bricks;
     this.ctx = ctx;
-
-    // this.updateScore();
+    this.value = 0;
+    this.gameWidth = gameWidth;
   }
 
-  draw(x = 9.5, y = 7.5) {
-    const currentScore = this.calculateScore();
-    // console.log("score", currentScore);
+  draw(x, y, font, color) {
+    // const currentScore = this.calculateScore();
+    this.x = x;
+    this.y = y;
+    this.font = font;
 
-    const text = "Score:  " + currentScore;
-    const boxWidth = this.width;
-    const boxHeight = this.height;
+    this.color = color;
+    const text = "Score: " + this.value;
 
-    this.ctx.fillStyle = "ivory";
-    this.ctx.font = "24px Angkor";
+    const textX = this.x + this.width / 2;
+    const textY = this.y + this.height / 2;
+
+    this.ctx.fillStyle = this.color;
+    this.ctx.font = this.font;
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
 
-    const textX = x + boxWidth / 2;
-    const textY = y + boxHeight / 2;
-
-    console.log(text);
     this.ctx.fillText(text, textX, textY);
   }
 
-  // updateScore() {
-  //   const currentScore = this.calculateScore();
-  //   this.container.innerHTML = "SCORE: " + currentScore;
-  // }
+  update(brick) {
+    this.value += brick.scoreValue();
+  }
 
   calculateScore() {
-    let scoreid = 0;
+    let score = 0;
+
     this.bricks.forEach((brick) => {
       if (!brick.show) {
-        scoreid++;
-        console.log(scoreid);
+        switch (brick.color) {
+          case "red":
+            score += 3;
+            break;
+          case "yellow":
+            score += 2;
+            break;
+          // case "green":
+          //   score += 1;
+          //   break;
+          default:
+            score += 1; // Default for any other color
+        }
       }
     });
-    return scoreid;
+
+    return score;
   }
 }

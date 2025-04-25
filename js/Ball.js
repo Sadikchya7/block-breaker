@@ -9,6 +9,7 @@ class Ball {
     this.dx = speed;
     this.dy = -speed;
     this.attached = true;
+    this.ballcount = 3;
   }
 
   draw() {
@@ -20,7 +21,7 @@ class Ball {
 
   move() {
     // debugger;
-    // console.log(this.attached, "moving");
+    // //console.log(this.attached, "moving");
     // this.attached = false;
     if (!this.attached) {
       this.x += this.dx;
@@ -31,15 +32,21 @@ class Ball {
     this.x = paddle.x + paddle.width / 2;
     this.y = paddle.y - this.radius - 3;
   }
-  checkCollisionWithWall(gameWidth, gameHeight, paddle) {
+  checkCollisionWithWall(gameWidth, gameHeight, paddle, state) {
     if (this.x + this.radius > gameWidth || this.x - this.radius < 0) {
       this.dx = -this.dx;
     }
-    if (this.y - this.radius < 55) {
+    if (this.y - this.radius < 0) {
       this.dy = -this.dy;
     }
-    if (this.y + this.radius > gameHeight) {
+    if (this.y + this.radius > gameHeight - paddle.height / 2) {
+      // this.ballcount--;
+      // if (this.ballcount === 0) {
       game.gameOver();
+      // } else {
+      //   state = "pause";
+      //   this.reset(paddle);
+      // }
     }
   }
 
@@ -51,7 +58,7 @@ class Ball {
   }
 
   checkCollisionWithBricks(brick) {
-    if (!brick.show) return;
+    if (!brick.show) return false;
 
     if (
       this.x + this.radius > brick.x &&
@@ -59,9 +66,26 @@ class Ball {
       this.y + this.radius > brick.y &&
       this.y - this.radius < brick.y + brick.height
     ) {
-      this.dy = -this.dy;
-      brick.show = false;
+      brick.checkShow();
+
+      const ballCenterX = this.x;
+      const ballCenterY = this.y;
+      const brickCenterX = brick.x + brick.width / 2;
+      const brickCenterY = brick.y + brick.height / 2;
+
+      const dx = ballCenterX - brickCenterX;
+      const dy = ballCenterY - brickCenterY;
+
+      if (Math.abs(dx) > Math.abs(dy)) {
+        this.dx = -this.dx;
+      } else {
+        this.dy = -this.dy;
+      }
+
+      return true;
     }
+
+    return false;
   }
 
   checkCollisionWithPaddle(paddle) {
@@ -71,7 +95,7 @@ class Ball {
       this.y + this.radius > paddle.y &&
       this.y - this.radius < paddle.y + paddle.height
     ) {
-      this.dy = -1 * this.dy;
+      this.dy = -this.dy;
     }
   }
 }

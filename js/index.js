@@ -3,8 +3,8 @@ firstDiv.width = window.innerWidth;
 firstDiv.height = window.innerHeight;
 
 var gameSection = document.getElementById("content");
-gameSection.width = firstDiv.width / 1.2;
-gameSection.height = firstDiv.height - 5;
+gameSection.width = 600;
+gameSection.height = firstDiv.height - 20;
 
 let context = gameSection.getContext("2d");
 
@@ -16,8 +16,8 @@ let game = new Game(
   gameSection.width
 );
 let gameID = null;
-
 function gameLoop() {
+  //onsole.log(firstDiv.height);
   game.start();
   requestAnimationFrame(gameLoop);
 }

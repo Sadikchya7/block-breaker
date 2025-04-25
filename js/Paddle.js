@@ -5,8 +5,8 @@ class Paddle {
     this.height = height;
     this.width = width;
     this.ball = ball;
-    this.x = ball.x - width / 2;
-    this.y = ball.y + height + 8;
+    this.x = ball.x - width;
+    this.y = ball.y - height * 2;
     this.speed = 10;
   }
 
