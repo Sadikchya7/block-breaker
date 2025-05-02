@@ -32,22 +32,18 @@ class Ball {
     this.x = paddle.x + paddle.width / 2;
     this.y = paddle.y - this.radius - 3;
   }
-  checkCollisionWithWall(gameWidth, gameHeight, paddle, state) {
+  checkCollisionWithWall(gameWidth, gameHeight, paddle) {
     if (this.x + this.radius > gameWidth || this.x - this.radius < 0) {
       this.dx = -this.dx;
     }
     if (this.y - this.radius < 0) {
       this.dy = -this.dy;
     }
-    if (this.y + this.radius > gameHeight - paddle.height / 2) {
-      // this.ballcount--;
-      // if (this.ballcount === 0) {
-      game.gameOver();
-      // } else {
-      //   state = "pause";
-      //   this.reset(paddle);
-      // }
+
+    if (this.y + this.radius > gameHeight - paddle / 2) {
+      game.drawLives();
     }
+    // game.gameOver();
   }
 
   reset(paddle) {

@@ -16,6 +16,7 @@ let game = new Game(
   gameSection.width
 );
 let gameID = null;
+
 function gameLoop() {
   //onsole.log(firstDiv.height);
   game.start();
