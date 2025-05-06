@@ -20,8 +20,7 @@ class Ball {
   }
 
   move() {
-    // debugger;
-    // //console.log(this.attached, "moving");
+    //
     // this.attached = false;
     if (!this.attached) {
       this.x += this.dx;
@@ -47,7 +46,7 @@ class Ball {
   }
 
   reset(paddle) {
-    // debugger;
+    //
     this.x = paddle.x + paddle.width / 2;
     this.y = paddle.y - this.radius - 3;
     this.attached = true;

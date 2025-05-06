@@ -15,7 +15,7 @@ class Brick {
 
   checkShow() {
     this.numberOfCollision += 1;
-    // debugger;
+    //
     if (this.numberOfCollision === this.maxCollisionNumber) {
       this.show = false;
     } else {
@@ -72,5 +72,10 @@ class Brick {
     this.ctx.fillStyle = this.getColor();
     this.ctx.roundRect(this.x, this.y, this.width, this.height, this.radii);
     this.ctx.fill();
+    this.ctx.strokeStyle = "black";
+    this.ctx.lineWidth = 1;
+    this.ctx.stroke();
+
+    this.ctx.closePath();
   }
 }

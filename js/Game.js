@@ -12,95 +12,116 @@ class Game {
     this.drawn = false;
     this.lives = 3;
 
+    // const level1 = [
+    //   { height: 30, width: 60, x: 45, y: 58, type: 3 },
+    //   { height: 30, width: 60, x: 110, y: 58, type: 3 },
+    //   { height: 30, width: 60, x: 175, y: 58, type: 3 },
+    //   { height: 30, width: 60, x: 240, y: 58, type: 3 },
+    //   { height: 30, width: 60, x: 305, y: 58, type: 3 },
+    //   { height: 30, width: 60, x: 370, y: 58, type: 3 },
+    //   { height: 30, width: 60, x: 435, y: 58, type: 3 },
+    //   { height: 30, width: 60, x: 500, y: 58, type: 3 },
+
+    //   // { height: 30, width: 60, x: 45, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 110, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 175, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 240, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 305, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 370, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 435, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 500, y: 93, type: 2 },
+
+    //   // { height: 30, width: 60, x: 45, y: 128, type: 1 },
+    //   // { height: 30, width: 60, x: 110, y: 128, type: 1 },
+    //   // { height: 30, width: 60, x: 175, y: 128, type: 1 },
+    //   // { height: 30, width: 60, x: 240, y: 128, type: 1 },
+    //   // { height: 30, width: 60, x: 305, y: 128, type: 1 },
+    //   // { height: 30, width: 60, x: 370, y: 128, type: 1 },
+    //   // { height: 30, width: 60, x: 435, y: 128, type: 1 },
+    //   // { height: 30, width: 60, x: 500, y: 128, type: 1 },
+
+    //   // { height: 50, width: 100, x: 516.68, y: 58, type: 3 },
+    //   // { height: 50, width: 100, x: 633.35, y: 58, type: 3 },
+
+    //   // { height: 50, width: 100, x: 50, y: 118, type: 2 },
+    //   // { height: 50, width: 100, x: 166.67, y: 118, type: 2 },
+    //   // { height: 50, width: 100, x: 283.34, y: 118, type: 2 },
+    //   // { height: 50, width: 100, x: 400.1, y: 118, type: 2 },
+    //   // { height: 50, width: 100, x: 516.68, y: 118, type: 2 },
+    //   // { height: 50, width: 100, x: 633.35, y: 118, type: 2 },
+
+    //   // { height: 50, width: 100, x: 50, y: 178, type: 1 },
+    //   // { height: 50, width: 100, x: 166.67, y: 178, type: 1 },
+    //   // { height: 50, width: 100, x: 283.34, y: 178, type: 1 },
+    //   // { height: 50, width: 100, x: 400.1, y: 178, type: 1 },
+    //   // { height: 50, width: 100, x: 516.68, y: 178, type: 1 },
+    //   // { height: 50, width: 100, x: 533.35, y: 178, type: 1 },
+    // ];
+    // const level2 = [
+    //   { height: 30, width: 60, x: 45, y: 58, type: 1 },
+    //   { height: 30, width: 60, x: 110, y: 58, type: 1 },
+    //   { height: 30, width: 60, x: 175, y: 58, type: 1 },
+    //   { height: 30, width: 60, x: 240, y: 58, type: 1 },
+    //   { height: 30, width: 60, x: 305, y: 58, type: 1 },
+    //   { height: 30, width: 60, x: 370, y: 58, type: 1 },
+    //   { height: 30, width: 60, x: 435, y: 58, type: 1 },
+    //   { height: 30, width: 60, x: 500, y: 58, type: 1 },
+
+    //   // { height: 30, width: 60, x: 45, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 110, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 175, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 240, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 305, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 370, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 435, y: 93, type: 2 },
+    //   // { height: 30, width: 60, x: 500, y: 93, type: 2 },
+
+    //   // { height: 30, width: 60, x: 45, y: 128, type: 3 },
+    //   // { height: 30, width: 60, x: 110, y: 128, type: 3 },
+    //   // { height: 30, width: 60, x: 175, y: 128, type: 3 },
+    //   // { height: 30, width: 60, x: 240, y: 128, type: 3 },
+    //   // { height: 30, width: 60, x: 305, y: 128, type: 3 },
+    //   // { height: 30, width: 60, x: 370, y: 128, type: 3 },
+    //   // { height: 30, width: 60, x: 435, y: 128, type: 3 },
+    //   // { height: 30, width: 60, x: 500, y: 128, type: 3 },
+    // ];
+    // const level3 = [
+    //   { height: 30, width: 60, x: 45, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 110, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 175, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 240, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 305, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 370, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 435, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 500, y: 58, type: 2 },
+    // ];
+    // const level4 = [
+    //   { height: 30, width: 60, x: 45, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 110, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 175, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 240, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 305, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 370, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 435, y: 58, type: 2 },
+    //   { height: 30, width: 60, x: 500, y: 58, type: 2 },
+    // ];
     const level1 = [
-      { height: 30, width: 60, x: 45, y: 58, type: 3 },
-      { height: 30, width: 60, x: 110, y: 58, type: 3 },
-      { height: 30, width: 60, x: 175, y: 58, type: 3 },
-      { height: 30, width: 60, x: 240, y: 58, type: 3 },
-      { height: 30, width: 60, x: 305, y: 58, type: 3 },
-      { height: 30, width: 60, x: 370, y: 58, type: 3 },
-      { height: 30, width: 60, x: 435, y: 58, type: 3 },
-      { height: 30, width: 60, x: 500, y: 58, type: 3 },
-
-      // { height: 30, width: 60, x: 45, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 110, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 175, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 240, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 305, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 370, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 435, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 500, y: 93, type: 2 },
-
-      // { height: 30, width: 60, x: 45, y: 128, type: 1 },
-      // { height: 30, width: 60, x: 110, y: 128, type: 1 },
-      // { height: 30, width: 60, x: 175, y: 128, type: 1 },
-      // { height: 30, width: 60, x: 240, y: 128, type: 1 },
-      // { height: 30, width: 60, x: 305, y: 128, type: 1 },
-      // { height: 30, width: 60, x: 370, y: 128, type: 1 },
-      // { height: 30, width: 60, x: 435, y: 128, type: 1 },
-      // { height: 30, width: 60, x: 500, y: 128, type: 1 },
-
-      // { height: 50, width: 100, x: 516.68, y: 58, type: 3 },
-      // { height: 50, width: 100, x: 633.35, y: 58, type: 3 },
-
-      // { height: 50, width: 100, x: 50, y: 118, type: 2 },
-      // { height: 50, width: 100, x: 166.67, y: 118, type: 2 },
-      // { height: 50, width: 100, x: 283.34, y: 118, type: 2 },
-      // { height: 50, width: 100, x: 400.1, y: 118, type: 2 },
-      // { height: 50, width: 100, x: 516.68, y: 118, type: 2 },
-      // { height: 50, width: 100, x: 633.35, y: 118, type: 2 },
-
-      // { height: 50, width: 100, x: 50, y: 178, type: 1 },
-      // { height: 50, width: 100, x: 166.67, y: 178, type: 1 },
-      // { height: 50, width: 100, x: 283.34, y: 178, type: 1 },
-      // { height: 50, width: 100, x: 400.1, y: 178, type: 1 },
-      // { height: 50, width: 100, x: 516.68, y: 178, type: 1 },
-      // { height: 50, width: 100, x: 533.35, y: 178, type: 1 },
+      [1, 1, 1, 1, 1],
+      [0, 0, 0, 0, 0],
+      // [2, 2, 2, 2, 2],
     ];
     const level2 = [
-      { height: 30, width: 60, x: 45, y: 58, type: 1 },
-      { height: 30, width: 60, x: 110, y: 58, type: 1 },
-      { height: 30, width: 60, x: 175, y: 58, type: 1 },
-      { height: 30, width: 60, x: 240, y: 58, type: 1 },
-      { height: 30, width: 60, x: 305, y: 58, type: 1 },
-      { height: 30, width: 60, x: 370, y: 58, type: 1 },
-      { height: 30, width: 60, x: 435, y: 58, type: 1 },
-      { height: 30, width: 60, x: 500, y: 58, type: 1 },
-
-      // { height: 30, width: 60, x: 45, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 110, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 175, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 240, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 305, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 370, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 435, y: 93, type: 2 },
-      // { height: 30, width: 60, x: 500, y: 93, type: 2 },
-
-      // { height: 30, width: 60, x: 45, y: 128, type: 3 },
-      // { height: 30, width: 60, x: 110, y: 128, type: 3 },
-      // { height: 30, width: 60, x: 175, y: 128, type: 3 },
-      // { height: 30, width: 60, x: 240, y: 128, type: 3 },
-      // { height: 30, width: 60, x: 305, y: 128, type: 3 },
-      // { height: 30, width: 60, x: 370, y: 128, type: 3 },
-      // { height: 30, width: 60, x: 435, y: 128, type: 3 },
-      // { height: 30, width: 60, x: 500, y: 128, type: 3 },
-    ];
-    const level3 = [
-      { height: 30, width: 60, x: 45, y: 58, type: 2 },
-      { height: 30, width: 60, x: 110, y: 58, type: 2 },
-      { height: 30, width: 60, x: 175, y: 58, type: 2 },
-      { height: 30, width: 60, x: 240, y: 58, type: 2 },
-      { height: 30, width: 60, x: 305, y: 58, type: 2 },
-      { height: 30, width: 60, x: 370, y: 58, type: 2 },
-      { height: 30, width: 60, x: 435, y: 58, type: 2 },
-      { height: 30, width: 60, x: 500, y: 58, type: 2 },
+      [1, 2, 3, 2, 1],
+      [1, 2, 3, 2, 1],
+      [2, 0, 0, 0, 2],
+      [3, 0, 1, 0, 3],
     ];
     const levelData = [
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
     ];
-    this.levels = [level1, level2, level3];
+    this.levels = [level1, level2, level1, level1];
     this.speed = 4;
     this.level = new Level(this.ctx, this.levels[this.currentLevel]);
     this.editor = new LevelEditor(
@@ -131,7 +152,6 @@ class Game {
     this.container.addEventListener("click", (event) => {
       const x = event.clientX - this.container.offsetLeft;
       const y = event.clientY - this.container.offsetTop;
-      //console.log(x, y);
       if (this.state === "menuPage") {
         if (
           x > this.playButton.x &&
@@ -142,6 +162,31 @@ class Game {
           this.state = "playing_1";
         }
         if (
+          x > this.stageButton.x &&
+          x < this.stageButton.x + this.stageButton.width &&
+          y > this.stageButton.y &&
+          y < this.stageButton.y + this.stageButton.height
+        ) {
+          this.state = "levelPage";
+        }
+      }
+      if (this.state === "levelPage") {
+        if (
+          this.levelSavedButton &&
+          x > this.levelSavedButton.x &&
+          x < this.levelSavedButton.x + this.levelSavedButton.width &&
+          y > this.levelSavedButton.y &&
+          y < this.levelSavedButton.y + this.levelSavedButton.height
+        ) {
+          this.state = "levelEditor";
+          const savedLevel = localStorage.getItem("levelData");
+          if (savedLevel) {
+            this.editor.level = JSON.parse(savedLevel);
+          }
+          this.editor.start();
+        }
+        if (
+          this.levelEditorButton &&
           x > this.levelEditorButton.x &&
           x < this.levelEditorButton.x + this.levelEditorButton.width &&
           y > this.levelEditorButton.y &&
@@ -149,150 +194,172 @@ class Game {
         ) {
           this.state = "levelEditor";
         }
-      }
-
-      if (
-        this.pausebutton && //pause button function
-        x > this.pausebutton.x &&
-        x < this.pausebutton.x + this.pausebutton.width &&
-        y > this.pausebutton.y &&
-        y < this.pausebutton.y + this.pausebutton.height
-      ) {
-        if (this.state === "pause") {
-          this.state = "start"; // Resume game
-        } else {
-          this.state = "pause"; // Pause the game
+        if (
+          this.exitbutton &&
+          x > this.exitbutton.x &&
+          x < this.exitbutton.x + this.exitbutton.width &&
+          y > this.exitbutton.y &&
+          y < this.exitbutton.y + this.exitbutton.height
+        ) {
+          this.state = "menuPage";
         }
-      }
-
-      //resset
-      if (
-        this.resetbutton &&
-        x > this.resetbutton.x &&
-        x < this.resetbutton.x + this.resetbutton.width &&
-        y > this.resetbutton.y &&
-        y < this.resetbutton.y + this.resetbutton.height
-      ) {
-        this.state = "reset";
-        // debugger;
-      }
-      if (
-        this.nextbutton &&
-        x > this.nextbutton.x &&
-        x < this.nextbutton.x + this.nextbutton.width &&
-        y > this.nextbutton.y &&
-        y < this.nextbutton.y + this.nextbutton.height
-      ) {
-        this.state = "next";
-        this.nextLevel();
-      }
-      for (let i = 0; i < this.editor.level.length; i++) {
-        for (let j = 0; j < this.editor.level[i].length; j++) {
-          const brickX =
-            this.editor.startX + j * (this.editor.brickWidth + this.editor.gap);
-          const brickY =
-            this.editor.startY +
-            i * (this.editor.brickHeight + this.editor.gap);
-
+        for (let i = 0; i < this.levelButtons.length; i++) {
+          const button = this.levelButtons[i];
           if (
-            x > brickX &&
-            x < brickX + this.editor.brickWidth &&
-            y > brickY &&
-            y < brickY + this.editor.brickHeight
+            x > button.x &&
+            x < button.x + button.width &&
+            y > button.y &&
+            y < button.y + button.height
           ) {
-            this.editor.level[i][j] = this.editor.selectedBrickType;
-            this.editor.ctx.clearRect(
-              0,
-              0,
-              this.editor.container.width,
-              this.editor.container.height
-            );
-            this.editor.start();
-            return;
+            console.log(this.levelButtons.length);
+            this.level = new Level(this.ctx, this.levels[i]);
+            this.state = "playing_1";
+            break;
           }
         }
       }
+      if (this.state === "levelEditor") {
+        for (let i = 0; i < this.editor.level.length; i++) {
+          for (let j = 0; j < this.editor.level[i].length; j++) {
+            const brickX =
+              this.editor.startX +
+              j * (this.editor.brickWidth + this.editor.gap);
+            const brickY =
+              this.editor.startY +
+              i * (this.editor.brickHeight + this.editor.gap);
 
-      if (
-        this.editor.typeone &&
-        x > this.editor.typeone.x &&
-        x < this.editor.typeone.x + this.editor.typeone.width &&
-        y > this.editor.typeone.y &&
-        y < this.editor.typeone.y + this.editor.typeone.height
-      ) {
-        this.editor.selectedBrickType = 1;
-
-        console.log("Selected Brick Type:", this.editor.selectedBrickType);
-        this.editor.ctx.clearRect(
-          0,
-          0,
-          this.editor.container.width,
-          this.editor.container.height
-        );
-        this.editor.start();
-      }
-      if (
-        this.editor.typetwo &&
-        x > this.editor.typetwo.x &&
-        x < this.editor.typetwo.x + this.editor.typetwo.width &&
-        y > this.editor.typetwo.y &&
-        y < this.editor.typetwo.y + this.editor.typetwo.height
-      ) {
-        this.editor.selectedBrickType = 2;
-        console.log("Selected Brick Type:", this.editor.selectedBrickType);
-        this.editor.ctx.clearRect(
-          0,
-          0,
-          this.editor.container.width,
-          this.editor.container.height
-        );
-        this.editor.start();
-      }
-      if (
-        this.editor.typethree &&
-        x > this.editor.typethree.x &&
-        x < this.editor.typethree.x + this.editor.typethree.width &&
-        y > this.editor.typethree.y &&
-        y < this.editor.typethree.y + this.editor.typethree.height
-      ) {
-        this.editor.selectedBrickType = 3;
-        console.log("Selected Brick Type:", this.editor.selectedBrickType);
-        this.editor.ctx.clearRect(
-          0,
-          0,
-          this.editor.container.width,
-          this.editor.container.height
-        );
-        this.editor.start();
-      }
-      if (
-        this.editor.savebutton &&
-        x > this.editor.savebutton.x &&
-        x < this.editor.savebutton.x + this.editor.savebutton.width &&
-        y > this.editor.savebutton.y &&
-        y < this.editor.savebutton.y + this.editor.savebutton.height
-      ) {
-        localStorage.setItem("levelData", JSON.stringify(this.editor.level));
-        console.log("levelData", JSON.stringify(this.editor.level));
-      }
-      if (
-        this.editor.loadbutton &&
-        x > this.editor.loadbutton.x &&
-        x < this.editor.loadbutton.x + this.editor.loadbutton.width &&
-        y > this.editor.loadbutton.y &&
-        y < this.editor.loadbutton.y + this.editor.loadbutton.height
-      ) {
-        debugger;
-        const savedLevel = localStorage.getItem("levelData");
-        if (savedLevel) {
-          this.editor.level = JSON.parse(savedLevel);
+            if (
+              x > brickX &&
+              x < brickX + this.editor.brickWidth &&
+              y > brickY &&
+              y < brickY + this.editor.brickHeight
+            ) {
+              this.editor.level[i][j] = this.editor.selectedBrickType;
+              this.editor.ctx.clearRect(
+                0,
+                0,
+                this.editor.container.width,
+                this.editor.container.height
+              );
+              this.editor.start();
+              return;
+            }
+          }
         }
-        this.editor.start();
+
+        if (
+          this.editor.typeone &&
+          x > this.editor.typeone.x &&
+          x < this.editor.typeone.x + this.editor.typeone.width &&
+          y > this.editor.typeone.y &&
+          y < this.editor.typeone.y + this.editor.typeone.height
+        ) {
+          this.editor.selectedBrickType = 1;
+
+          this.editor.ctx.clearRect(
+            0,
+            0,
+            this.editor.container.width,
+            this.editor.container.height
+          );
+          this.editor.start();
+        }
+        if (
+          this.editor.typetwo &&
+          x > this.editor.typetwo.x &&
+          x < this.editor.typetwo.x + this.editor.typetwo.width &&
+          y > this.editor.typetwo.y &&
+          y < this.editor.typetwo.y + this.editor.typetwo.height
+        ) {
+          this.editor.selectedBrickType = 2;
+          this.editor.ctx.clearRect(
+            0,
+            0,
+            this.editor.container.width,
+            this.editor.container.height
+          );
+          this.editor.start();
+        }
+        if (
+          this.editor.typethree &&
+          x > this.editor.typethree.x &&
+          x < this.editor.typethree.x + this.editor.typethree.width &&
+          y > this.editor.typethree.y &&
+          y < this.editor.typethree.y + this.editor.typethree.height
+        ) {
+          this.editor.selectedBrickType = 3;
+          this.editor.ctx.clearRect(
+            0,
+            0,
+            this.editor.container.width,
+            this.editor.container.height
+          );
+          this.editor.start();
+        }
+        if (
+          this.editor.savebutton &&
+          x > this.editor.savebutton.x &&
+          x < this.editor.savebutton.x + this.editor.savebutton.width &&
+          y > this.editor.savebutton.y &&
+          y < this.editor.savebutton.y + this.editor.savebutton.height
+        ) {
+          localStorage.setItem("levelData", JSON.stringify(this.editor.level));
+        }
+        if (
+          this.editor.exitbutton &&
+          x > this.editor.exitbutton.x &&
+          x < this.editor.exitbutton.x + this.editor.exitbutton.width &&
+          y > this.editor.exitbutton.y &&
+          y < this.editor.exitbutton.y + this.editor.exitbutton.height
+        ) {
+          this.state = "levelPage";
+        }
+      }
+      if (
+        this.state === "playing_1" ||
+        this.state === "pause" ||
+        this.state === "start"
+      ) {
+        if (
+          this.pausebutton && //pause button function
+          x > this.pausebutton.x &&
+          x < this.pausebutton.x + this.pausebutton.width &&
+          y > this.pausebutton.y &&
+          y < this.pausebutton.y + this.pausebutton.height
+        ) {
+          if (this.state === "pause") {
+            this.state = "start"; // Resume game
+          } else {
+            this.state = "pause";
+            // Pause the game
+          }
+        }
+
+        //resset
+        if (
+          this.resetbutton &&
+          x > this.resetbutton.x &&
+          x < this.resetbutton.x + this.resetbutton.width &&
+          y > this.resetbutton.y &&
+          y < this.resetbutton.y + this.resetbutton.height
+        ) {
+          this.state = "reset";
+          //
+        }
+        if (
+          this.nextbutton &&
+          x > this.nextbutton.x &&
+          x < this.nextbutton.x + this.nextbutton.width &&
+          y > this.nextbutton.y &&
+          y < this.nextbutton.y + this.nextbutton.height
+        ) {
+          this.state = "next";
+          this.nextLevel();
+        }
       }
     });
 
     document.addEventListener("keydown", (event) => {
-      //console.log(event.key);
       const key = event.key;
       if (this.state === "pause") {
         if (key == "Escape") {
@@ -315,13 +382,18 @@ class Game {
             this.state = "start";
           }
           if (this.state === "gameOver") {
-            debugger;
             this.state = "reset";
             this.updateView();
             this.state = "menuPage";
             this.menuPage();
           }
         // this.state = "start";
+      }
+
+      if (key == "Escape") {
+        this.state = "reset";
+        this.updateView();
+        this.state = "menuPage";
       }
     });
   }
@@ -367,7 +439,7 @@ class Game {
     const LevelEditorTextX = x;
     const LevelEditorTextY = y + 140;
 
-    this.levelEditorButton = {
+    this.stageButton = {
       x: LevelEditorTextX - boxWidth / 2,
       y: LevelEditorTextY - boxHeight / 2,
       width: boxWidth,
@@ -376,8 +448,8 @@ class Game {
 
     this.ctx.fillStyle = "#FF6347 ";
     this.ctx.fillRect(
-      this.levelEditorButton.x,
-      this.levelEditorButton.y,
+      this.stageButton.x,
+      this.stageButton.y,
       boxWidth,
       boxHeight
     );
@@ -386,6 +458,135 @@ class Game {
     this.ctx.fillText(LevelEditorText, LevelEditorTextX, LevelEditorTextY + 5);
 
     // this.drawn = true;
+  }
+
+  levelPage(message = "LEVELS", x = 100, y = 50) {
+    this.state = "levelPage";
+    this.ctx.clearRect(0, 0, this.width, this.height);
+    this.ctx.fillStyle = "#1A1A1A";
+    this.ctx.fillRect(0, 0, this.width, this.height);
+
+    // Heading
+    this.ctx.font = "30px Alfa Slab One";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillStyle = "#F0E68C";
+    this.ctx.fillText(message, x, y);
+
+    //exit button
+    const exitBoxWidth = 30;
+    const exitBoxHeight = 30;
+    const image = document.getElementById("cross");
+
+    this.exitbutton = {
+      x: this.width - exitBoxWidth - x / 4,
+      y: y / 2,
+      width: exitBoxWidth,
+      height: exitBoxHeight,
+    };
+
+    this.ctx.drawImage(
+      image,
+      this.exitbutton.x,
+      this.exitbutton.y,
+      exitBoxWidth,
+      exitBoxHeight
+    );
+
+    //levelsData
+    this.levelButtons = [];
+
+    const boxWidth = 50;
+    const boxHeight = 40;
+    const gap = 20;
+    const LevelIndexStartY = y + 60;
+    // ==============================
+    // Level Index
+    // ==============================
+    for (let i = 0; i < this.levels.length; i++) {
+      const levelIndexX = x + i * (boxWidth + gap);
+      const levelIndexY = LevelIndexStartY;
+
+      this.levelIndexButton = {
+        x: levelIndexX - boxWidth / 2,
+        y: levelIndexY - boxHeight / 2 + 4,
+        width: boxWidth,
+        height: boxHeight,
+        level: i + 1,
+      };
+      this.levelButtons.push(this.levelIndexButton);
+
+      this.ctx.fillStyle = "#FF6347 ";
+      this.ctx.fillRect(
+        this.levelIndexButton.x,
+        this.levelIndexButton.y,
+        boxWidth,
+        boxHeight
+      );
+
+      this.ctx.fillStyle = "#FFFFFF";
+      this.ctx.font = "20px Arial";
+      this.ctx.fillText(
+        this.levelIndexButton.level,
+        levelIndexX,
+        levelIndexY + 5
+      );
+    }
+    // ==============================
+    // Saved Level
+    // ==============================
+    const SavedIndex = this.levels.length;
+    const SavedBoxWidth = 120;
+    const SavedBoxHeight = 40;
+    const SavedX = x + SavedIndex * (SavedBoxWidth - boxWidth + gap - 7);
+    const SavedY = LevelIndexStartY;
+    this.levelSavedButton = {
+      x: SavedX - SavedBoxWidth / 2,
+      y: SavedY - SavedBoxHeight / 2 + 4,
+      width: SavedBoxWidth,
+      height: SavedBoxHeight,
+    };
+    this.ctx.fillStyle = "#FF6347";
+    this.ctx.fillRect(
+      this.levelSavedButton.x,
+      this.levelSavedButton.y,
+      SavedBoxWidth,
+      SavedBoxHeight
+    );
+    this.ctx.fillStyle = "#FFFFFF";
+    this.ctx.font = "20px Arial";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillText("Your Level", SavedX, SavedY + 4);
+
+    // ==============================
+    // LEVEL EDITOR
+    // ==============================
+    const editorBoxWidth = 120;
+    const editorBoxHeight = 40;
+    const editorX = editorBoxWidth + gap - 5;
+    const editorY = LevelIndexStartY + 40 + gap;
+    this.levelEditorButton = {
+      x: editorX - editorBoxWidth / 2,
+      y: editorY - editorBoxHeight / 2 + 4,
+      width: editorBoxWidth,
+      height: editorBoxHeight,
+    };
+
+    this.ctx.fillStyle = "#FF6347";
+    this.ctx.fillRect(
+      this.levelEditorButton.x,
+      this.levelEditorButton.y,
+      editorBoxWidth,
+      editorBoxHeight
+    );
+
+    // Draw text
+    this.ctx.fillStyle = "#FFFFFF";
+    this.ctx.font = "20px Arial";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillText("Level Editor", editorX, editorY + 4);
   }
 
   start() {
@@ -408,6 +609,8 @@ class Game {
     } else if (this.state === "levelEditor") {
       this.update();
       this.updateView();
+    } else if (this.state === "levelPage") {
+      this.levelPage();
     }
     //else if (this.state === "gameOver") {
     //  this.state = "menuPage";
@@ -420,6 +623,7 @@ class Game {
     }
     if (this.state === "levelEditor") {
       this.editor.start();
+      return;
     }
     if (this.state === "start") {
       this.ball.attached = false;
@@ -431,7 +635,7 @@ class Game {
           this.level.bricks[i]
         );
         if (hasCollided) {
-          // debugger;
+          //
           this.score.update(this.level.bricks[i]);
         }
       }
@@ -440,7 +644,7 @@ class Game {
     const allBricksCleared = this.level.bricks.every((brick) => !brick.show);
     if (allBricksCleared && this.state !== "next") {
       this.state = "next";
-      // debugger;
+      //
       this.nextLevel();
     }
     if (this.state === "gameOver") {
@@ -455,6 +659,7 @@ class Game {
     this.pauseButton();
     this.resetButton();
     this.nextButton();
+    // this.levelPage();
     this.score.draw(
       this.width / 2 - this.score.width,
       7.5,
@@ -477,6 +682,7 @@ class Game {
     this.resetButton();
     this.nextButton();
     this.drawLives();
+    // this.levelPage();
     this.score.draw(
       this.width / 2 - this.score.width,
       7.5,
@@ -494,7 +700,6 @@ class Game {
       this.ctx.roundRect(this.width / 2 - 390 / 2, 270, 390, 210, 30);
       this.ctx.fill();
       // this.ctx.roundRect( 30);
-      console.log(this.height / 3);
       this.ctx.fillStyle = "red";
       this.ctx.font = "50px Alfa Slab One";
       this.ctx.textAlign = "center";
@@ -541,7 +746,6 @@ class Game {
     if (this.ball.y - this.ball.radius > this.height) {
       this.lives--;
       if (this.lives === 0) {
-        debugger;
         this.state = "gameOver";
         this.updateView();
       } else {
@@ -573,7 +777,17 @@ class Game {
       this.state === "next" ||
       (allBricksCleared && this.currentLevel < this.levels.length)
     ) {
-      //console.log(allBricksCleared);
+      if (this.currentLevel > this.levels.length) {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+        this.ctx.fillRect(0, 0, this.width, this.height);
+        this.ctx.fillStyle = "white";
+        this.ctx.font = "50px Arial";
+        this.ctx.textAlign = "center";
+        this.ctx.textBaseline = "middle";
+        this.ctx.fillText("LEVEL COMPLETED", this.width / 2, this.height / 2);
+        setTimeout(this.gameOver(), 2000);
+      }
       this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
       this.ctx.fillRect(0, 0, this.width, this.height);
       this.ctx.fillStyle = "white";
@@ -583,25 +797,14 @@ class Game {
       this.ctx.fillText("Next Level", this.width / 2, this.height / 2);
       setTimeout(() => {
         this.currentLevel++;
+        debugger;
         if (this.currentLevel < this.levels.length) {
           this.level = new Level(this.ctx, this.levels[this.currentLevel]);
           this.speed += 10;
 
-          console.log(this.speed);
           this.ball.reset(this.paddle);
 
           this.state = "playing_1";
-        } else if (this.currentLevel === this.levels.length) {
-          console.log("All levels completed!");
-          this.ctx.clearRect(0, 0, this.width, this.height);
-          this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-          this.ctx.fillRect(0, 0, this.width, this.height);
-          this.ctx.fillStyle = "white";
-          this.ctx.font = "50px Arial";
-          this.ctx.textAlign = "center";
-          this.ctx.textBaseline = "middle";
-          this.ctx.fillText("LEVEL COMPLETED", this.width / 2, this.height / 2);
-          setTimeout(this.gameOver(), 2000);
         }
       }, 2000);
     }
@@ -623,6 +826,7 @@ class Game {
     this.ctx.fillRect(x, y, boxWidth, boxHeight);
     this.ctx.drawImage(image, x, y, boxWidth, boxHeight);
   }
+
   resetButton(x = this.width - 105, y = 9.5) {
     const boxWidth = 35;
     const boxHeight = 35;
@@ -638,6 +842,7 @@ class Game {
     this.ctx.fillRect(x, y, boxWidth, boxHeight);
     this.ctx.drawImage(image, x, y, boxWidth, boxHeight);
   }
+
   nextButton(x = this.width - 47.5, y = 7.5) {
     // const text = "Next";
     const boxWidth = 40;
@@ -655,20 +860,6 @@ class Game {
     this.ctx.drawImage(image, x, y, boxWidth, boxHeight);
   }
 
-  // drawLives() {
-  //   const radius = 10;
-  //   const spacing = 30;
-  //   const startX = 20;
-  //   const y = 20;
-
-  //   for (let i = 0; i < this.lives; i++) {
-  //     this.ctx.beginPath();
-  //     this.ctx.arc(startX + i * spacing, y, radius, 0, Math.PI * 2);
-  //     this.ctx.fillStyle = "red";
-  //     this.ctx.fill();
-  //     this.ctx.closePath();
-  //   }
-  // }
   drawLives() {
     const radius = 10;
     const spacing = 30;
