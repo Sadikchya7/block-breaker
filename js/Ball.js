@@ -20,8 +20,6 @@ class Ball {
   }
 
   move() {
-    //
-    // this.attached = false;
     if (!this.attached) {
       this.x += this.dx;
       this.y += this.dy;
@@ -42,11 +40,9 @@ class Ball {
     if (this.y + this.radius > gameHeight - paddle / 2) {
       game.drawLives();
     }
-    // game.gameOver();
   }
 
   reset(paddle) {
-    //
     this.x = paddle.x + paddle.width / 2;
     this.y = paddle.y - this.radius - 3;
     this.attached = true;

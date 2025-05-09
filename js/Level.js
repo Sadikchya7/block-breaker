@@ -12,11 +12,11 @@ class Level {
 
   createBricks(level) {
     const bricks = [];
+
     for (let i = 0; i < level.length; i++) {
       let brickRow = [];
       for (let j = 0; j < level[i].length; j++) {
         const type = this.level[i][j];
-        // console.log(type.length);
         if (type === 0) continue;
         const x = this.startX + j * (this.BrickWidth + this.gap);
         const y = this.startY + i * (this.BrickHeight + this.gap);
@@ -26,7 +26,6 @@ class Level {
         );
       }
       bricks.push(brickRow);
-      // brickRow = []
     }
     return bricks;
   }
@@ -35,14 +34,11 @@ class Level {
     for (let i = 0; i < this.bricks.length; i++) {
       for (let j = 0; j < this.bricks[i].length; j++) {
         this.bricks[i][j].draw();
-        // debugger;
       }
     }
   }
 
   draw(x, y, font, color) {
-    // const currentScore = this.calculateScore();
-
     this.x = x;
     this.y = y;
     this.font = font;

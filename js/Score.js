@@ -9,7 +9,6 @@ class Score {
   }
 
   draw(x, y, font, color) {
-    // const currentScore = this.calculateScore();
     this.x = x;
     this.y = y;
     this.font = font;
@@ -30,29 +29,5 @@ class Score {
 
   update(brick) {
     this.value += brick.scoreValue();
-  }
-
-  calculateScore() {
-    let score = 0;
-
-    this.bricks.forEach((brick) => {
-      if (!brick.show) {
-        switch (brick.color) {
-          case "red":
-            score += 3;
-            break;
-          case "yellow":
-            score += 2;
-            break;
-          // case "green":
-          //   score += 1;
-          //   break;
-          default:
-            score += 1; // Default for any other color
-        }
-      }
-    });
-
-    return score;
   }
 }

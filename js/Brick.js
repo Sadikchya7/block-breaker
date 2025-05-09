@@ -7,7 +7,6 @@ class Brick {
     this.y = y;
     this.show = true;
     this.radii = 10;
-    // this.damage
     this.numberOfCollision = 0;
     this.type = type;
     this.maxCollisionNumber = this.getNumberOfCollision();
@@ -15,7 +14,6 @@ class Brick {
 
   checkShow() {
     this.numberOfCollision += 1;
-    //
     if (this.numberOfCollision === this.maxCollisionNumber) {
       this.show = false;
     } else {

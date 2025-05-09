@@ -7,7 +7,7 @@ class Paddle {
     this.ball = ball;
     this.x = ball.x - width;
     this.y = ball.y - height * 2;
-    this.speed = 10;
+    this.speed = 15;
   }
 
   draw() {
@@ -26,6 +26,7 @@ class Paddle {
   }
 
   moveRight() {
+    // debugger;
     this.x += this.speed;
     if (this.ball.attached) {
       this.ball.attachToPaddle(this);
@@ -33,6 +34,7 @@ class Paddle {
   }
 
   moveLeft() {
+    console.log("left");
     this.x -= this.speed;
     if (this.ball.attached) {
       this.ball.attachToPaddle(this);
