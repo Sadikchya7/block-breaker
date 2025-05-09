@@ -1,31 +1,91 @@
 class LevelEditor {
-  constructor(
-    container,
-    context,
-    levelData,
-    brickWidth,
-    brickHeight,
-    gap,
-    startX = 50,
-    startY = 100,
-    brick
-  ) {
+  constructor(bricks, container, context, level, game) {
+    this.bricks = bricks;
     this.radii = 10;
     this.state = "levelEditor";
     this.container = container;
     this.ctx = context;
-    this.level = levelData;
-    this.brickWidth = brickWidth;
-    this.brickHeight = brickHeight;
-    this.gap = gap;
-    this.startX = startX;
-    this.startY = startY;
-    this.selectedBrickType = 0;
+    this.game = game;
+    this.level = level;
+    this.levelEditor = [
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+    ];
+
+    this.selectedBrickType = 1;
     this.width = 600;
     this.height = this.container.height;
     this.bgColor = "#212F3C ";
+    this.initcontrols();
   }
+  initcontrols() {
+    this.container.addEventListener("click", (event) => {
+      const x = event.clientX - this.container.offsetLeft;
+      const y = event.clientY - this.container.offsetTop;
+      if (
+        this.exitbutton &&
+        x > this.exitbutton.x &&
+        x < this.exitbutton.x + this.exitbutton.width &&
+        y > this.exitbutton.y &&
+        y < this.exitbutton.y + this.exitbutton.height
+      ) {
+        this.game.state = "levelPage";
 
+        return;
+      }
+      for (let i = 0; i < this.levelEditor.length; i++) {
+        for (let j = 0; j < this.levelEditor[i].length; j++) {
+          const brickX =
+            this.level.startX + j * (this.level.BrickWidth + this.level.gap);
+          const brickY =
+            this.level.startY + i * (this.level.BrickHeight + this.level.gap);
+          if (
+            x > brickX &&
+            x < brickX + this.level.BrickWidth &&
+            y > brickY &&
+            y < brickY + this.level.BrickHeight
+          ) {
+            this.levelEditor[i][j] = this.selectedBrickType;
+            this.bricks[i][j].type = this.selectedBrickType;
+            this.ctx.clearRect(
+              0,
+              0,
+              this.container.width,
+              this.container.height
+            );
+            this.start();
+            return;
+          }
+        }
+      }
+      for (let i = 0; i < this.selectorButtons.length; i++) {
+        const button = this.selectorButtons[i];
+        if (
+          x > button.x &&
+          x < button.x + button.width &&
+          y > button.y &&
+          y < button.y + button.height
+        ) {
+          console.log(button.type);
+          this.selectedBrickType = button.type;
+          this.ctx.clearRect(0, 0, this.container.width, this.container.height);
+          this.start();
+        }
+      }
+
+      if (
+        this.savebutton &&
+        x > this.savebutton.x &&
+        x < this.savebutton.x + this.savebutton.width &&
+        y > this.savebutton.y &&
+        y < this.savebutton.y + this.savebutton.height
+      ) {
+        localStorage.setItem("levelData", JSON.stringify(this.levelEditor));
+      }
+    });
+  }
   draw() {
     this.ctx.beginPath();
     this.ctx.rect(0, 0, this.width, this.height);
@@ -33,148 +93,68 @@ class LevelEditor {
     this.ctx.fill();
   }
   drawLevel() {
-    for (let i = 0; i < this.level.length; i++) {
-      for (let j = 0; j < this.level[i].length; j++) {
-        const brickType = this.level[i][j];
-        let color = "white";
-
-        if (brickType === 1) color = "red";
-        if (brickType === 2) color = "blue";
-        if (brickType === 3) color = "yellow";
-
-        const x = this.startX + j * (this.brickWidth + this.gap);
-        const y = this.startY + i * (this.brickHeight + this.gap);
-        this.drawBrick(x, y, color);
+    for (let i = 0; i < this.levelEditor.length; i++) {
+      for (let j = 0; j < this.levelEditor[i].length; j++) {
+        this.bricks[i][j].draw();
       }
     }
   }
-  drawBrick(x, y, color) {
-    this.ctx.beginPath();
-    this.ctx.roundRect(x, y, this.brickWidth, this.brickHeight, this.radii);
+  selector(x = 50, y = 3) {
+    this.selectorButtons = [];
+    const boxWidth = 30;
+    const boxHeight = 30;
+    const gap = 20;
+    const selectorStartY = y + 20;
 
-    this.ctx.fillStyle = color;
-    this.ctx.fill();
+    for (let i2 = 0; i2 <= 4; i2++) {
+      const selectorX = x + i2 * (boxWidth + gap);
+      const selectorY = selectorStartY;
+      const button = {
+        x: selectorX - boxWidth / 2,
+        y: selectorY - boxHeight / 2 + 4,
+        width: boxWidth,
+        height: boxHeight,
+        type: i2,
+      };
+      this.selectorButtons.push(button);
 
-    this.ctx.strokeStyle = "black";
-    this.ctx.lineWidth = 1;
-    this.ctx.stroke();
+      // Color mapping
+      const color = (() => {
+        switch (i2) {
+          case 1:
+            return "green";
+          case 2:
+            return "yellow";
+          case 3:
+            return "red";
+          case 4:
+            return "blue";
+          default:
+            return "#666666"; // gray for empty brick (type 0)
+        }
+      })();
 
-    this.ctx.closePath();
-  }
-  typeOne(x = 50, y = 7.5, text = "1") {
-    this.ctx.beginPath();
-    const boxWidth = 40;
-    const boxHeight = 40;
+      this.ctx.fillStyle = color;
+      this.ctx.fillRect(button.x, button.y, boxWidth, boxHeight);
 
-    this.typeone = { x, y, width: boxWidth, height: boxHeight };
-    this.ctx.fillStyle = "red";
-    this.ctx.fillRect(x, y, boxWidth, boxHeight);
-
-    this.ctx.fillStyle = "#212F3C";
-    this.ctx.font = "12px Arial";
-    this.ctx.textAlign = "center";
-    this.ctx.textBaseline = "middle";
-
-    this.ctx.fillText(text, x + boxWidth / 2, y + boxHeight / 2);
-
-    if (this.selectedBrickType === 1) {
-      this.ctx.fillStyle = "white";
-      this.ctx.fillRect(x, y, boxWidth, boxHeight);
-
-      this.ctx.fillStyle = "red";
-      this.ctx.font = "16px Arial";
+      this.ctx.fillStyle = "#FFFFFF";
+      this.ctx.font = "20px Arial";
       this.ctx.textAlign = "center";
-      this.ctx.textBaseline = "middle";
-
-      this.ctx.strokeStyle = "red";
-      this.ctx.lineWidth = 5;
-
-      this.ctx.strokeRect(x, y, boxWidth, boxHeight);
-
-      this.ctx.fillText(text, x + boxWidth / 2, y + boxHeight / 2);
-    }
-  }
-
-  typeTwo(x = 100, y = 7.5, text = "2") {
-    this.ctx.beginPath();
-    const boxWidth = 40;
-    const boxHeight = 40;
-
-    this.typetwo = { x, y, width: boxWidth, height: boxHeight };
-    this.ctx.fillStyle = "blue";
-    this.ctx.fillRect(x, y, boxWidth, boxHeight);
-
-    this.ctx.fillStyle = "#212F3C";
-    this.ctx.font = "12px Arial";
-    this.ctx.textAlign = "center";
-    this.ctx.textBaseline = "middle";
-
-    this.ctx.fillText(text, x + boxWidth / 2, y + boxHeight / 2);
-
-    if (this.selectedBrickType === 2) {
-      this.ctx.fillStyle = "white";
-      this.ctx.fillRect(x, y, boxWidth, boxHeight);
-
-      this.ctx.fillStyle = "blue";
-      this.ctx.font = "16px Arial";
-      this.ctx.textAlign = "center";
-      this.ctx.textBaseline = "middle";
-      this.ctx.strokeStyle = "blue";
-      this.ctx.lineWidth = 5;
-      this.ctx.strokeRect(x, y, boxWidth, boxHeight);
-
-      this.ctx.fillText(text, x + boxWidth / 2, y + boxHeight / 2);
-    }
-  }
-
-  typeThree(x = 150, y = 7.5, text = "3") {
-    this.ctx.beginPath();
-    const boxWidth = 40;
-    const boxHeight = 40;
-
-    this.typethree = { x, y, width: boxWidth, height: boxHeight };
-    this.ctx.fillStyle = "yellow";
-    this.ctx.fillRect(x, y, boxWidth, boxHeight);
-
-    this.ctx.fillStyle = "#212F3C";
-    this.ctx.font = "12px Arial";
-    this.ctx.textAlign = "center";
-    this.ctx.textBaseline = "middle";
-
-    this.ctx.fillText(text, x + boxWidth / 2, y + boxHeight / 2);
-    if (this.selectedBrickType === 3) {
-      this.ctx.fillStyle = "white";
-      this.ctx.fillRect(x, y, boxWidth, boxHeight);
-
-      this.ctx.fillStyle = "yellow";
-      this.ctx.font = "16px Arial";
-      this.ctx.textAlign = "center";
-      this.ctx.textBaseline = "middle";
-
-      this.ctx.strokeStyle = "yellow";
-      this.ctx.lineWidth = 5;
-
-      this.ctx.strokeRect(x, y, boxWidth, boxHeight);
-
-      this.ctx.fillText(text, x + boxWidth / 2, y + boxHeight / 2);
+      this.ctx.fillText(i2, selectorX, selectorY + 5);
     }
   }
 
   start() {
     this.draw();
-    // this.initcontrols();
-    this.typeOne();
-    this.typeTwo();
-    this.typeThree();
     this.drawLevel();
     this.saveButton();
     this.ExitButton();
+    this.selector();
   }
-  saveButton(x = 100, y = this.brickHeight * 6, text = "SAVE") {
+  saveButton(x = 100, y = this.height - 100, text = "SAVE") {
     this.ctx.beginPath();
     const boxWidth = 80;
     const boxHeight = 40;
-
     this.savebutton = { x, y, width: boxWidth, height: boxHeight };
     this.ctx.fillStyle = "white";
     this.ctx.fillRect(x, y, boxWidth, boxHeight);
@@ -187,7 +167,7 @@ class LevelEditor {
     this.ctx.textBaseline = "middle";
     this.ctx.fillText(text, x + boxWidth / 2, y + boxHeight / 2);
   }
-  ExitButton(x = 100, y = 50) {
+  ExitButton(x = 90, y = 20) {
     const exitBoxWidth = 30;
     const exitBoxHeight = 30;
     const image = document.getElementById("cross");

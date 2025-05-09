@@ -106,8 +106,11 @@ class Game {
     //   { height: 30, width: 60, x: 500, y: 58, type: 2 },
     // ];
     const level1 = [
+      [4, 4, 4, 4, 4],
+      [3, 3, 3, 3, 3],
+      [2, 2, 2, 2, 2],
       [1, 1, 1, 1, 1],
-      [0, 0, 0, 0, 0],
+
       // [2, 2, 2, 2, 2],
     ];
     const level2 = [
@@ -116,32 +119,21 @@ class Game {
       [2, 0, 0, 0, 2],
       [3, 0, 1, 0, 3],
     ];
-    const levelData = [
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ];
+
     this.levels = [level1, level2, level1, level1];
     this.speed = 4;
     this.level = new Level(this.ctx, this.levels[this.currentLevel]);
-    this.editor = new LevelEditor(
-      this.container,
-      this.ctx,
-      levelData,
-      100,
-      50,
-      0
-    ); //(width,height,gap)
+    this.editor = null;
 
     this.ball = new Ball(
       this.ctx,
-      20,
+      15,
       "white",
       this.speed,
       this.width,
       this.height
     );
-    this.paddle = new Paddle(this.ctx, "white", 10, 100, this.ball); //orange color
+    this.paddle = new Paddle(this.ctx, "white", 10, 150, this.ball); //orange color
     this.ball.attachToPaddle(this.paddle);
     this.score = new Score(40, 100, this.level.bricks, this.ctx, this.width);
 
@@ -192,6 +184,15 @@ class Game {
           y > this.levelEditorButton.y &&
           y < this.levelEditorButton.y + this.levelEditorButton.height
         ) {
+          this.editor = new LevelEditor(
+            this.level.bricks,
+            this.container,
+            this.ctx,
+            this.level,
+            this
+
+            // this.level.bricks
+          ); //(width,height,gap)
           this.state = "levelEditor";
         }
         if (
@@ -211,110 +212,14 @@ class Game {
             y > button.y &&
             y < button.y + button.height
           ) {
-            console.log(this.levelButtons.length);
+            // console.log(this.levelButtons.length);
             this.level = new Level(this.ctx, this.levels[i]);
             this.state = "playing_1";
             break;
           }
         }
       }
-      if (this.state === "levelEditor") {
-        for (let i = 0; i < this.editor.level.length; i++) {
-          for (let j = 0; j < this.editor.level[i].length; j++) {
-            const brickX =
-              this.editor.startX +
-              j * (this.editor.brickWidth + this.editor.gap);
-            const brickY =
-              this.editor.startY +
-              i * (this.editor.brickHeight + this.editor.gap);
 
-            if (
-              x > brickX &&
-              x < brickX + this.editor.brickWidth &&
-              y > brickY &&
-              y < brickY + this.editor.brickHeight
-            ) {
-              this.editor.level[i][j] = this.editor.selectedBrickType;
-              this.editor.ctx.clearRect(
-                0,
-                0,
-                this.editor.container.width,
-                this.editor.container.height
-              );
-              this.editor.start();
-              return;
-            }
-          }
-        }
-
-        if (
-          this.editor.typeone &&
-          x > this.editor.typeone.x &&
-          x < this.editor.typeone.x + this.editor.typeone.width &&
-          y > this.editor.typeone.y &&
-          y < this.editor.typeone.y + this.editor.typeone.height
-        ) {
-          this.editor.selectedBrickType = 1;
-
-          this.editor.ctx.clearRect(
-            0,
-            0,
-            this.editor.container.width,
-            this.editor.container.height
-          );
-          this.editor.start();
-        }
-        if (
-          this.editor.typetwo &&
-          x > this.editor.typetwo.x &&
-          x < this.editor.typetwo.x + this.editor.typetwo.width &&
-          y > this.editor.typetwo.y &&
-          y < this.editor.typetwo.y + this.editor.typetwo.height
-        ) {
-          this.editor.selectedBrickType = 2;
-          this.editor.ctx.clearRect(
-            0,
-            0,
-            this.editor.container.width,
-            this.editor.container.height
-          );
-          this.editor.start();
-        }
-        if (
-          this.editor.typethree &&
-          x > this.editor.typethree.x &&
-          x < this.editor.typethree.x + this.editor.typethree.width &&
-          y > this.editor.typethree.y &&
-          y < this.editor.typethree.y + this.editor.typethree.height
-        ) {
-          this.editor.selectedBrickType = 3;
-          this.editor.ctx.clearRect(
-            0,
-            0,
-            this.editor.container.width,
-            this.editor.container.height
-          );
-          this.editor.start();
-        }
-        if (
-          this.editor.savebutton &&
-          x > this.editor.savebutton.x &&
-          x < this.editor.savebutton.x + this.editor.savebutton.width &&
-          y > this.editor.savebutton.y &&
-          y < this.editor.savebutton.y + this.editor.savebutton.height
-        ) {
-          localStorage.setItem("levelData", JSON.stringify(this.editor.level));
-        }
-        if (
-          this.editor.exitbutton &&
-          x > this.editor.exitbutton.x &&
-          x < this.editor.exitbutton.x + this.editor.exitbutton.width &&
-          y > this.editor.exitbutton.y &&
-          y < this.editor.exitbutton.y + this.editor.exitbutton.height
-        ) {
-          this.state = "levelPage";
-        }
-      }
       if (
         this.state === "playing_1" ||
         this.state === "pause" ||
@@ -327,6 +232,7 @@ class Game {
           y > this.pausebutton.y &&
           y < this.pausebutton.y + this.pausebutton.height
         ) {
+          //console.log(this.state + "hi");
           if (this.state === "pause") {
             this.state = "start"; // Resume game
           } else {
@@ -533,6 +439,17 @@ class Game {
       );
     }
     // ==============================
+    // YOUR LEVEL SECTION
+    // ==============================
+    this.X = x + 30;
+    this.Y = LevelIndexStartY + gap * 4;
+    this.ctx.font = "25px Alfa Slab One";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillStyle = "#F0E68C";
+    this.ctx.fillText("YOUR LEVELS", this.X, this.Y);
+
+    // ==============================
     // Saved Level
     // ==============================
     const SavedIndex = this.levels.length;
@@ -565,7 +482,7 @@ class Game {
     const editorBoxWidth = 120;
     const editorBoxHeight = 40;
     const editorX = editorBoxWidth + gap - 5;
-    const editorY = LevelIndexStartY + 40 + gap;
+    const editorY = LevelIndexStartY + 40 + gap + editorBoxWidth;
     this.levelEditorButton = {
       x: editorX - editorBoxWidth / 2,
       y: editorY - editorBoxHeight / 2 + 4,
@@ -592,24 +509,34 @@ class Game {
   start() {
     if (this.state === "menuPage") {
       this.menuPage();
+      //console.log(this.state);
     } else if (this.state === "pause") {
+      //console.log(this.state);
       this.updateView();
     } else if (this.state === "start") {
+      //console.log(this.state);
       this.update();
       this.updateView();
       this.nextLevel();
     } else if (this.state === "playing_1") {
+      //console.log(this.state);
       this.update();
       this.updateView();
       // this.nextLevel();
     } else if (this.state === "reset") {
+      //console.log(this.state);
       this.state = "playing_1";
       this.ball.reset(this.paddle);
+      this.score.value = 0;
+      this.lives = 3;
       this.level = new Level(this.ctx, this.levels[this.currentLevel]);
     } else if (this.state === "levelEditor") {
+      //console.log(this.state);
       this.update();
       this.updateView();
     } else if (this.state === "levelPage") {
+      //console.log(this.state);
+      debugger;
       this.levelPage();
     }
     //else if (this.state === "gameOver") {
@@ -660,6 +587,7 @@ class Game {
     this.resetButton();
     this.nextButton();
     // this.levelPage();
+    this.level.draw(this.width / 2, 7.5, "24px Angkor, sans-serif", "ivory");
     this.score.draw(
       this.width / 2 - this.score.width,
       7.5,
@@ -683,6 +611,7 @@ class Game {
     this.nextButton();
     this.drawLives();
     // this.levelPage();
+    this.level.draw(this.width / 2, 7.5, "24px Angkor, sans-serif", "ivory");
     this.score.draw(
       this.width / 2 - this.score.width,
       7.5,
@@ -690,28 +619,10 @@ class Game {
       "ivory"
     );
 
-    this.level.bricks.forEach((brick) => brick.draw());
+    this.level.drawAllBricks();
 
     if (this.state === "gameOver") {
-      this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-      this.ctx.fillRect(0, 0, this.width, this.height);
-
-      this.ctx.fillStyle = "rgba(0, 0, 0, 1)";
-      this.ctx.roundRect(this.width / 2 - 390 / 2, 270, 390, 210, 30);
-      this.ctx.fill();
-      // this.ctx.roundRect( 30);
-      this.ctx.fillStyle = "red";
-      this.ctx.font = "50px Alfa Slab One";
-      this.ctx.textAlign = "center";
-      this.ctx.textBaseline = "middle";
-      this.ctx.fillText("GAME OVER", this.width / 2, this.height / 2);
-
-      this.score.draw(
-        this.width / 2 - this.score.width / 2,
-        this.height / 2 + this.score.height,
-        "30px Angkor, sans-serif",
-        "ivory"
-      );
+      this.gameOver();
       this.score.value = 0;
       this.lives = 3;
       return;
@@ -740,6 +651,9 @@ class Game {
     if (this.state === "reset") {
       this.state = "playing_1";
       this.ball.reset(this.paddle);
+      this.lives = 3;
+      this.score.value = 0;
+
       this.level = new Level(this.ctx, this.levels[this.currentLevel]);
       return;
     }
@@ -769,6 +683,25 @@ class Game {
 
   gameOver() {
     this.state = "gameOver";
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    this.ctx.fillRect(0, 0, this.width, this.height);
+
+    this.ctx.fillStyle = "rgba(0, 0, 0, 1)";
+    this.ctx.roundRect(this.width / 2 - 390 / 2, 270, 390, 210, 30);
+    this.ctx.fill();
+    // this.ctx.roundRect( 30);
+    this.ctx.fillStyle = "red";
+    this.ctx.font = "50px Alfa Slab One";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillText("GAME OVER", this.width / 2, this.height / 2);
+
+    this.score.draw(
+      this.width / 2 - this.score.width / 2,
+      this.height / 2 + this.score.height,
+      "30px Angkor, sans-serif",
+      "ivory"
+    );
   }
 
   nextLevel() {
@@ -797,7 +730,7 @@ class Game {
       this.ctx.fillText("Next Level", this.width / 2, this.height / 2);
       setTimeout(() => {
         this.currentLevel++;
-        debugger;
+        // debugger;
         if (this.currentLevel < this.levels.length) {
           this.level = new Level(this.ctx, this.levels[this.currentLevel]);
           this.speed += 10;
@@ -861,7 +794,7 @@ class Game {
   }
 
   drawLives() {
-    const radius = 10;
+    const radius = 13;
     const spacing = 30;
     const x = 20;
     const y = 20;

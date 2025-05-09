@@ -39,30 +39,32 @@ class Brick {
   getColor() {
     switch (this.type) {
       case 1:
-        return "red";
+        return "green";
       case 2:
-        return "blue";
-      case 3:
         return "yellow";
+      case 3:
+        return "red";
+      case 4:
+        return "blue";
 
       default:
-        return "red";
+        return "white";
     }
   }
 
   scoreValue() {
     switch (this.type) {
       case 1:
-        return 1;
+        return 50;
       case 2:
-        return 2;
+        return 100;
       case 3:
-        return 3;
+        return 100;
       case 4:
-        return 4;
+        return 50;
 
       default:
-        return 1;
+        return 10;
     }
   }
 
@@ -75,7 +77,6 @@ class Brick {
     this.ctx.strokeStyle = "black";
     this.ctx.lineWidth = 1;
     this.ctx.stroke();
-
     this.ctx.closePath();
   }
 }
