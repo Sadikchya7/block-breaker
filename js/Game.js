@@ -11,10 +11,10 @@ class Game {
     this.lives = 3;
     this.state = "menuPage";
     const level1 = [
-      [4, 4, 4, 4, 4],
+      [4, , 4, 4, 4, 4],
       [3, 3, 3, 3, 3],
       [2, 2, 2, 2, 2],
-      [0, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1],
     ];
     const level2 = [
       [1, 2, 3, 2, 1],
@@ -59,7 +59,6 @@ class Game {
           y > this.stageButton.y &&
           y < this.stageButton.y + this.stageButton.height
         ) {
-          debugger;
           this.state = "levelPage";
         }
       }
@@ -71,12 +70,13 @@ class Game {
           y > this.levelSavedButton.y &&
           y < this.levelSavedButton.y + this.levelSavedButton.height
         ) {
-          this.state = "levelEditor";
+          this.state = "SavedLevel";
           const savedLevel = localStorage.getItem("levelData");
           if (savedLevel) {
             this.editor.level = JSON.parse(savedLevel);
           }
-          this.editor.start();
+          this.editor.drawLevel();
+          this.start();
         }
         if (
           this.levelEditorButton &&
@@ -154,6 +154,7 @@ class Game {
           y < this.nextbutton.y + this.nextbutton.height
         ) {
           this.state = "next";
+          debugger;
           this.nextLevel();
         }
       }
@@ -178,7 +179,6 @@ class Game {
         default:
           console.log(this.state);
           if (this.state === "playing_1") {
-            debugger;
             this.state = "start";
           }
           if (this.state === "gameOver") {
@@ -190,6 +190,7 @@ class Game {
       }
 
       if (key == "Escape") {
+        this.currentLevel = 0;
         this.state = "reset";
         this.updateView();
         this.state = "menuPage";
@@ -423,7 +424,6 @@ class Game {
       this.editor.start();
       return;
     } else if (this.state === "start") {
-      debugger;
       this.ball.attached = false;
       this.ball.move();
       this.ball.checkCollisionWithWall(this.width, this.height, this.paddle);
@@ -437,13 +437,51 @@ class Game {
         }
       }
       this.ball.checkCollisionWithPaddle(this.paddle);
+    } else if (this.state === "SavedLevel") {
     }
-    // const allBricksCleared = this.level.bricks.every((brick) => !brick.show);
-    // if (allBricksCleared && this.state !== "next") {
-    //   this.state = "next";
-    //   //
-    //   this.nextLevel();
+    //
+    // for (let i = 0; i < this.level.bricks.length; i++) {
+    //   const allBricksCleared = this.level.bricks[i].show;
+    //   for (let j = 0; j < this.level.bricks[i].length; j++) {
+    //     if (allBricksCleared && this.state !== "next") {
+    //       console.log(this.state);
+    //       this.state = "next";
+    //       this.nextLevel();
+    //       this.currentLevel++;
+    //     }
+    //     break;
+    //     // if (!allBricksCleared) break;
+    //   }
     // }
+    let allBricksCleared = true;
+
+    for (let i = 0; i < this.level.bricks.length; i++) {
+      for (let j = 0; j < this.level.bricks[i].length; j++) {
+        if (this.level.bricks[i][j].show === true) {
+          allBricksCleared = false;
+          break;
+        }
+      }
+      if (!allBricksCleared) break;
+    }
+
+    if (allBricksCleared) {
+      console.log(allBricksCleared);
+      this.ctx.clearRect(0, 0, this.width, this.height);
+      this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+      this.ctx.fillRect(0, 0, this.width, this.height);
+      this.ctx.fillStyle = "white";
+      this.ctx.font = "50px Arial";
+      this.ctx.textAlign = "center";
+      this.ctx.textBaseline = "middle";
+      this.ctx.fillText("Next Level", this.width / 2, this.height / 2);
+      this.state = "next";
+      debugger;
+      this.nextLevel();
+    }
+
+    // console.log(count);
+
     if (this.state === "gameOver") {
       this.score.draw(
         this.width / 2 - this.score.width,
@@ -508,7 +546,6 @@ class Game {
         this.width / 2,
         this.height / 2 + 50
       );
-      // this.pauseButton((x = this.width - 327.5), (y = 7.5), (imgname = "play"));
       return;
     }
     if (this.state === "reset") {
@@ -566,54 +603,45 @@ class Game {
     );
   }
 
-  // nextLevel() {
-  //   for (let i = 0; i < this.level.bricks.length; i++) {
-  //     for (let j = 0; j < this.level.bricks[i].length; j++) {
-  //       const allBricksCleared = this.level.bricks[i][j].every(
-  //         (brick) => !brick.show
-  //       );
-  //       if (
-  //         this.state === "next" ||
-  //         (allBricksCleared && this.currentLevel < this.levels.length)
-  //       ) {
-  //         if (this.currentLevel > this.levels.length) {
-  //           this.ctx.clearRect(0, 0, this.width, this.height);
-  //           this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-  //           this.ctx.fillRect(0, 0, this.width, this.height);
-  //           this.ctx.fillStyle = "white";
-  //           this.ctx.font = "50px Arial";
-  //           this.ctx.textAlign = "center";
-  //           this.ctx.textBaseline = "middle";
-  //           this.ctx.fillText(
-  //             "LEVEL COMPLETED",
-  //             this.width / 2,
-  //             this.height / 2
-  //           );
-  //           setTimeout(this.gameOver(), 2000);
-  //         }
-  //         this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-  //         this.ctx.fillRect(0, 0, this.width, this.height);
-  //         this.ctx.fillStyle = "white";
-  //         this.ctx.font = "50px Arial";
-  //         this.ctx.textAlign = "center";
-  //         this.ctx.textBaseline = "middle";
-  //         this.ctx.fillText("Next Level", this.width / 2, this.height / 2);
-  //         setTimeout(() => {
-  //           this.currentLevel++;
-  //           // debugger;
-  //           if (this.currentLevel < this.levels.length) {
-  //             this.level = new Level(this.ctx, this.levels[this.currentLevel]);
-  //             this.speed += 10;
+  nextLevel() {
+    for (let i = 0; i < this.level.bricks.length; i++) {
+      for (let j = 0; j < this.level.bricks[i].length; j++) {
+        this.currentLevel++;
+        if (
+          this.state === "next" ||
+          (allBricksCleared && this.currentLevel < this.levels.length)
+        ) {
+          if (this.currentLevel > this.levels.length) {
+            debugger;
+            this.ctx.clearRect(0, 0, this.width, this.height);
+            this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+            this.ctx.fillRect(0, 0, this.width, this.height);
+            this.ctx.fillStyle = "white";
+            this.ctx.font = "50px Arial";
+            this.ctx.textAlign = "center";
+            this.ctx.textBaseline = "middle";
+            this.ctx.fillText(
+              "LEVEL COMPLETED",
+              this.width / 2,
+              this.height / 2
+            );
+          }
 
-  //             this.ball.reset(this.paddle);
+          setTimeout(() => {
+            // ;
+            if (this.currentLevel < this.levels.length) {
+              this.level = new Level(this.ctx, this.levels[this.currentLevel]);
+              this.speed += 10;
 
-  //             this.state = "playing_1";
-  //           }
-  //         }, 2000);
-  //       }
-  //     }
-  //   }
-  // }
+              this.ball.reset(this.paddle);
+
+              this.state = "playing_1";
+            }
+          }, 1000);
+        }
+      }
+    }
+  }
 
   pauseButton(x = this.width - 162.5, y = 7.5, imgname = "pause") {
     const boxWidth = 40;

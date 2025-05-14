@@ -13,9 +13,9 @@ class Level {
   createBricks(level) {
     const bricks = [];
 
-    for (let i = 0; i < level.length; i++) {
+    for (let i = 0; i < this.level.length; i++) {
       let brickRow = [];
-      for (let j = 0; j < level[i].length; j++) {
+      for (let j = 0; j < this.level[i].length; j++) {
         const type = this.level[i][j];
         if (type === 0) continue;
         const x = this.startX + j * (this.BrickWidth + this.gap);

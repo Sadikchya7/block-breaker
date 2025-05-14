@@ -26,7 +26,7 @@ class Paddle {
   }
 
   moveRight() {
-    // debugger;
+    // ;
     this.x += this.speed;
     if (this.ball.attached) {
       this.ball.attachToPaddle(this);

@@ -146,10 +146,10 @@ class LevelEditor {
 
   start() {
     this.draw();
-    this.drawLevel();
     this.saveButton();
     this.ExitButton();
     this.selector();
+    this.drawLevel();
   }
   saveButton(x = 100, y = this.height - 100, text = "SAVE") {
     this.ctx.beginPath();
