@@ -15,15 +15,15 @@ class LevelEditor {
       [0, 0, 0, 0, 0],
     ];
     const level2 = [
+      [1, 1, 1, 1, 1],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
-      // [0, 0, 0, 0, 0],
-      // [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
     ];
     this.data = [level1, level2];
-    // console.log(this.data.length);
+
     this.levelEditor = this.data[this.currentLevel];
-    // console.log(this.levelEditor);
+
     this.bricks = [];
     this.saveCLick = false;
     for (let i = 0; i < this.levelEditor.length; i++) {
@@ -94,7 +94,6 @@ class LevelEditor {
           y > button.y &&
           y < button.y + button.height
         ) {
-          // console.log(button.type);
           this.selectedBrickType = button.type;
           this.ctx.clearRect(0, 0, this.container.width, this.container.height);
           this.start();
@@ -115,7 +114,7 @@ class LevelEditor {
         setTimeout(() => {
           this.saveCLick = false;
           this.start();
-        }, 300);
+        }, 50);
       }
     });
   }
@@ -186,7 +185,6 @@ class LevelEditor {
       this.ctx.fillText(i2, selectorX, selectorY + 5);
     }
   }
-
   start() {
     this.draw();
     this.saveButton();

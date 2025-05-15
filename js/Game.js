@@ -83,15 +83,19 @@ class Game {
             // this.start();
           }
         }
-
-        if (
-          this.levelEditorButton &&
-          x > this.levelEditorButton.x &&
-          x < this.levelEditorButton.x + this.levelEditorButton.width &&
-          y > this.levelEditorButton.y &&
-          y < this.levelEditorButton.y + this.levelEditorButton.height
-        ) {
-          this.state = "levelEditor";
+        for (let i = 0; i < this.editor.data.length; i++) {
+          const button = this.levelEditorButtons[i];
+          if (
+            x > button.x &&
+            x < button.x + button.width &&
+            y > button.y &&
+            y < button.y + button.height
+          ) {
+            this.editor.currentLevel = i + 1;
+            this.state = "levelEditor";
+            console.log(i);
+            break;
+          }
         }
         if (
           this.exitbutton &&
@@ -371,7 +375,7 @@ class Game {
     // Level Index
     for (let i = 0; i < this.editor.data.length; i++) {
       const editorX = x + i * (boxWidth + gap);
-      const editorY = LevelIndexStartY + 40 + gap + editorBoxWidth;
+      const editorY = LevelIndexStartY + 70 + gap + editorBoxWidth;
 
       this.levelEditorButton = {
         x: editorX - editorBoxWidth / 2,
@@ -477,45 +481,31 @@ class Game {
       this.ball.checkCollisionWithPaddle(this.paddle);
     } else if (this.state === "SavedLevel") {
     }
-    //
-    // for (let i = 0; i < this.level.bricks.length; i++) {
-    //   const allBricksCleared = this.level.bricks[i].show;
-    //   for (let j = 0; j < this.level.bricks[i].length; j++) {
-    //     if (allBricksCleared && this.state !== "next") {
-    //       console.log(this.state);
-    //       this.state = "next";
-    //       this.nextLevel();
-    //       this.currentLevel++;
-    //     }
-    //     break;
-    //     // if (!allBricksCleared) break;
-    //   }
-    // }
     let allBricksCleared = true;
-
-    for (let i = 0; i < this.level.bricks.length; i++) {
-      for (let j = 0; j < this.level.bricks[i].length; j++) {
-        if (this.level.bricks[i][j].show === true) {
-          allBricksCleared = false;
-          break;
+    if (this.state === "playing_1") {
+      for (let i = 0; i < this.level.bricks.length; i++) {
+        for (let j = 0; j < this.level.bricks[i].length; j++) {
+          if (this.level.bricks[i][j].show === true) {
+            allBricksCleared = false;
+            break;
+          }
         }
+        if (!allBricksCleared) break;
       }
-      if (!allBricksCleared) break;
-    }
 
-    if (allBricksCleared) {
-      // console.log(allBricksCleared);
-      this.ctx.clearRect(0, 0, this.width, this.height);
-      this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-      this.ctx.fillRect(0, 0, this.width, this.height);
-      this.ctx.fillStyle = "white";
-      this.ctx.font = "50px Arial";
-      this.ctx.textAlign = "center";
-      this.ctx.textBaseline = "middle";
-      this.ctx.fillText("Next Level", this.width / 2, this.height / 2);
-      this.state = "next";
-      debugger;
-      this.nextLevel();
+      if (allBricksCleared) {
+        // console.log(allBricksCleared);
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+        this.ctx.fillRect(0, 0, this.width, this.height);
+        this.ctx.fillStyle = "white";
+        this.ctx.font = "50px Arial";
+        this.ctx.textAlign = "center";
+        this.ctx.textBaseline = "middle";
+        this.ctx.fillText("Next Level", this.width / 2, this.height / 2);
+        this.state = "next";
+        this.nextLevel();
+      }
     }
 
     // console.log(count);
