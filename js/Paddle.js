@@ -34,7 +34,7 @@ class Paddle {
   }
 
   moveLeft() {
-    console.log("left");
+    // console.log("left");
     this.x -= this.speed;
     if (this.ball.attached) {
       this.ball.attachToPaddle(this);

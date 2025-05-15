@@ -1,18 +1,44 @@
 class LevelEditor {
-  constructor(bricks, container, context, level, game) {
-    this.bricks = bricks;
+  constructor(container, context, level, game) {
+    // this.bricks = bricks;
     this.radii = 10;
     this.state = "levelEditor";
     this.container = container;
     this.ctx = context;
     this.game = game;
     this.level = level;
-    this.levelEditor = [
+    this.currentLevel = 0;
+    const level1 = [
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0],
     ];
+    const level2 = [
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      // [0, 0, 0, 0, 0],
+      // [0, 0, 0, 0, 0],
+    ];
+    this.data = [level1, level2];
+    // console.log(this.data.length);
+    this.levelEditor = this.data[this.currentLevel];
+    // console.log(this.levelEditor);
+    this.bricks = [];
+    this.saveCLick = false;
+    for (let i = 0; i < this.levelEditor.length; i++) {
+      let brickRow = [];
+      for (let j = 0; j < this.levelEditor[i].length; j++) {
+        const x =
+          this.level.startX + j * (this.level.BrickWidth + this.level.gap);
+        const y =
+          this.level.startY + i * (this.level.BrickHeight + this.level.gap);
+        const width = this.level.BrickWidth;
+        const height = this.level.BrickHeight;
+        brickRow.push(new Brick(this.ctx, height, width, x, y));
+      }
+      this.bricks.push(brickRow);
+    }
 
     this.selectedBrickType = 1;
     this.width = 600;
@@ -68,7 +94,7 @@ class LevelEditor {
           y > button.y &&
           y < button.y + button.height
         ) {
-          console.log(button.type);
+          // console.log(button.type);
           this.selectedBrickType = button.type;
           this.ctx.clearRect(0, 0, this.container.width, this.container.height);
           this.start();
@@ -82,7 +108,14 @@ class LevelEditor {
         y > this.savebutton.y &&
         y < this.savebutton.y + this.savebutton.height
       ) {
+        this.saveCLick = true;
         localStorage.setItem("levelData", JSON.stringify(this.levelEditor));
+        this.start();
+
+        setTimeout(() => {
+          this.saveCLick = false;
+          this.start();
+        }, 300);
       }
     });
   }
@@ -118,7 +151,6 @@ class LevelEditor {
       };
       this.selectorButtons.push(button);
 
-      // Color mapping
       const color = (() => {
         switch (i2) {
           case 1:
@@ -130,12 +162,23 @@ class LevelEditor {
           case 4:
             return "blue";
           default:
-            return "#666666"; // gray for empty brick (type 0)
+            return "#666666";
         }
       })();
 
       this.ctx.fillStyle = color;
       this.ctx.fillRect(button.x, button.y, boxWidth, boxHeight);
+
+      if (this.selectedBrickType === i2) {
+        this.ctx.lineWidth = 3;
+        this.ctx.strokeStyle = "#FFFFFF";
+        this.ctx.strokeRect(
+          button.x - 2,
+          button.y - 2,
+          boxWidth + 4,
+          boxHeight + 4
+        );
+      }
 
       this.ctx.fillStyle = "#FFFFFF";
       this.ctx.font = "20px Arial";
@@ -157,8 +200,12 @@ class LevelEditor {
     const boxHeight = 40;
     this.savebutton = { x, y, width: boxWidth, height: boxHeight };
     this.ctx.fillStyle = "white";
+    if (this.saveCLick === true) {
+      this.ctx.strokeStyle = "white";
+      this.ctx.lineWidth = 3;
+    }
     this.ctx.fillRect(x, y, boxWidth, boxHeight);
-    this.ctx.strokeStyle = "black";
+
     this.ctx.strokeRect(x, y, boxWidth, boxHeight);
 
     this.ctx.fillStyle = "#212F3C";

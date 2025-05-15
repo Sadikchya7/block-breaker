@@ -10,7 +10,7 @@ class Level {
     this.bricks = this.createBricks(level);
   }
 
-  createBricks(level) {
+  createBricks() {
     const bricks = [];
 
     for (let i = 0; i < this.level.length; i++) {
