@@ -17,10 +17,9 @@ class Game {
       [1, 1, 1, 1, 1],
     ];
     const level2 = [
-      [1, 2, 3, 2, 1],
-      [1, 2, 3, 2, 1],
-      [2, 0, 0, 0, 2],
-      [3, 0, 1, 0, 3],
+      [1, 2, 3, 4, 1],
+      [2, 3, 4, 1, 2],
+      [3, 4, 1, 2, 3],
     ];
 
     this.levels = [level1, level2];
@@ -72,30 +71,34 @@ class Game {
         ) {
           this.state = "playing_1";
           const savedLevel = localStorage.getItem("levelData");
-          if (savedLevel) {
-            const levelSaved = JSON.parse(savedLevel);
-            // this.yourLevel = new YourLevelPlay(
-            //   this.ctx,
-            //   levelSaved,
-            //   this.level
-            // );
-            this.level = new Level(this.ctx, levelSaved);
-            // this.start();
+          for (let i = 0; i < savedLevel.length; i++) {
+            if (savedLevel) {
+              const levelSaved = JSON.parse(savedLevel);
+              // this.yourLevel = new YourLevelPlay(
+              //   this.ctx,
+              //   levelSaved,
+              //   this.level
+              // );
+              this.level = new Level(this.ctx, levelSaved[i]);
+              // this.start();
+            }
           }
         }
-        for (let i = 0; i < this.editor.data.length; i++) {
-          const button = this.levelEditorButtons[i];
-          if (
-            x > button.x &&
-            x < button.x + button.width &&
-            y > button.y &&
-            y < button.y + button.height
-          ) {
-            this.editor.currentLevel = i + 1;
-            this.state = "levelEditor";
-            console.log(i);
-            break;
-          }
+
+        if (
+          this.levelEditorButton &&
+          x > this.levelEditorButton.x &&
+          x < this.levelEditorButton.x + this.levelEditorButton.width &&
+          y > this.levelEditorButton.y &&
+          y < this.levelEditorButton.y + this.levelEditorButton.height
+        ) {
+          this.state = "levelEditor";
+          this.editor = new LevelEditor(
+            this.container,
+            this.ctx,
+            this.level,
+            this
+          );
         }
         if (
           this.exitbutton &&
@@ -296,13 +299,13 @@ class Game {
 
     //levelsData
     this.levelButtons = [];
-
     const boxWidth = 50;
     const boxHeight = 40;
     const gap = 20;
     const LevelIndexStartY = y + 60;
     // Level Index
     for (let i = 0; i < this.levels.length; i++) {
+      this.currentLevel = i;
       const levelIndexX = x + i * (boxWidth + gap);
       const levelIndexY = LevelIndexStartY;
 
@@ -341,11 +344,12 @@ class Game {
     this.ctx.fillText("YOUR LEVELS", this.X, this.Y);
 
     // Saved Level
-    const SavedIndex = this.levels.length;
-    const SavedBoxWidth = 120;
+    const SavedLevel = [];
+    // const SavedIndex = this.levels.length;
+    const SavedBoxWidth = 50;
     const SavedBoxHeight = 40;
-    const SavedX = x + SavedIndex * (SavedBoxWidth - boxWidth + gap - 7);
-    const SavedY = LevelIndexStartY;
+    const SavedX = x + (SavedBoxWidth - boxWidth);
+    const SavedY = LevelIndexStartY + 140;
     this.levelSavedButton = {
       x: SavedX - SavedBoxWidth / 2,
       y: SavedY - SavedBoxHeight / 2 + 4,
@@ -359,74 +363,69 @@ class Game {
       SavedBoxWidth,
       SavedBoxHeight
     );
+    // console.log(this.editor.data);
+
     this.ctx.fillStyle = "#FFFFFF";
     this.ctx.font = "20px Arial";
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
-    this.ctx.fillText("Your Level", SavedX, SavedY + 4);
+    this.ctx.fillText("S", SavedX, SavedY + 4);
 
-    // LEVEL EDITOR
-    this.editor = new LevelEditor(this.container, this.ctx, this.level, this);
+    // const SavedBoxWidth = 50;
+    // const SavedBoxHeight = 40;
+    // const savedLevel = localStorage.getItem("levelData");
 
-    this.levelEditorButtons = [];
-    const editorBoxWidth = 50;
+    // for (let i = 0; i < savedLevel.length; i++) {
+    //   const SavedX = x + i * (boxWidth + gap);
+    //   const SavedY = LevelIndexStartY + 140;
+
+    //   this.levelSavedButton = {
+    //     x: SavedX - SavedBoxWidth / 2,
+    //     y: SavedY - SavedBoxHeight / 2 + 4,
+    //     width: SavedBoxWidth,
+    //     height: SavedBoxHeight,
+    //     level: i + 1,
+    //   };
+    //   this.ctx.fillStyle = "#FF6347";
+    //   this.ctx.fillRect(
+    //     this.levelSavedButton.x,
+    //     this.levelSavedButton.y,
+    //     SavedBoxWidth,
+    //     SavedBoxHeight
+    //   );
+    //   this.ctx.fillStyle = "#FFFFFF";
+    //   this.ctx.font = "20px Arial";
+    //   this.ctx.textAlign = "center";
+    //   this.ctx.textBaseline = "middle";
+    //   this.ctx.fillText(this.levelSavedButton.level, SavedX, SavedY + 4);
+    // }
+    // // LEVEL EDITOR
+
+    const editorBoxWidth = 200;
     const editorBoxHeight = 40;
+    const editorX = editorBoxWidth - 50;
+    const editorY = this.height - editorBoxHeight;
+    this.levelEditorButton = {
+      x: editorX - editorBoxWidth / 2,
+      y: editorY - editorBoxHeight / 2 + 4,
+      width: editorBoxWidth,
+      height: editorBoxHeight,
+    };
 
-    // Level Index
-    for (let i = 0; i < this.editor.data.length; i++) {
-      const editorX = x + i * (boxWidth + gap);
-      const editorY = LevelIndexStartY + 70 + gap + editorBoxWidth;
+    this.ctx.fillStyle = "#FF6347";
+    this.ctx.fillRect(
+      this.levelEditorButton.x,
+      this.levelEditorButton.y,
+      editorBoxWidth,
+      editorBoxHeight
+    );
 
-      this.levelEditorButton = {
-        x: editorX - editorBoxWidth / 2,
-        y: editorY - editorBoxHeight / 2 + 4,
-        width: editorBoxWidth,
-        height: editorBoxHeight,
-        index: i + 1,
-      };
-      this.levelEditorButtons.push(this.levelEditorButton);
-
-      this.ctx.fillStyle = "#FF6347";
-      this.ctx.fillRect(
-        this.levelEditorButton.x,
-        this.levelEditorButton.y,
-        editorBoxWidth,
-        editorBoxHeight
-      );
-
-      // Draw text
-      this.ctx.fillStyle = "#FFFFFF";
-      this.ctx.font = "20px Arial";
-      this.ctx.textAlign = "center";
-      this.ctx.textBaseline = "middle";
-      this.ctx.fillText(this.levelEditorButton.index, editorX, editorY + 4);
-    }
-    // console.log(this.editor);
-    // const editorBoxWidth = 120;
-    // const editorBoxHeight = 40;
-    // const editorX = editorBoxWidth + gap - 5;
-    // const editorY = LevelIndexStartY + 40 + gap + editorBoxWidth;
-    // this.levelEditorButton = {
-    //   x: editorX - editorBoxWidth / 2,
-    //   y: editorY - editorBoxHeight / 2 + 4,
-    //   width: editorBoxWidth,
-    //   height: editorBoxHeight,
-    // };
-
-    // this.ctx.fillStyle = "#FF6347";
-    // this.ctx.fillRect(
-    //   this.levelEditorButton.x,
-    //   this.levelEditorButton.y,
-    //   editorBoxWidth,
-    //   editorBoxHeight
-    // );
-
-    // // Draw text
-    // this.ctx.fillStyle = "#FFFFFF";
-    // this.ctx.font = "20px Arial";
-    // this.ctx.textAlign = "center";
-    // this.ctx.textBaseline = "middle";
-    // this.ctx.fillText("Level Editor", editorX, editorY + 4);
+    // Draw text
+    this.ctx.fillStyle = "#FFFFFF";
+    this.ctx.font = "20px Arial";
+    this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
+    this.ctx.fillText("Create New level", editorX, editorY + 4);
   }
 
   start() {
@@ -507,9 +506,6 @@ class Game {
         this.nextLevel();
       }
     }
-
-    // console.log(count);
-
     if (this.state === "gameOver") {
       this.score.draw(
         this.width / 2 - this.score.width,

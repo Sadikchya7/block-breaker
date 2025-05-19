@@ -8,27 +8,23 @@ class LevelEditor {
     this.game = game;
     this.level = level;
     this.currentLevel = 0;
-    const level1 = [
+    this.levelEditorbrick = [
       [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ];
-    const level2 = [
-      [1, 1, 1, 1, 1],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-    ];
-    this.data = [level1, level2];
 
-    this.levelEditor = this.data[this.currentLevel];
+      [0, 0, 0, 0, 0],
+
+      [0, 0, 0, 0, 0],
+
+      [0, 0, 0, 0, 0],
+
+      [0, 0, 0, 0, 0],
+    ];
 
     this.bricks = [];
     this.saveCLick = false;
-    for (let i = 0; i < this.levelEditor.length; i++) {
+    for (let i = 0; i < this.levelEditorbrick.length; i++) {
       let brickRow = [];
-      for (let j = 0; j < this.levelEditor[i].length; j++) {
+      for (let j = 0; j < this.levelEditorbrick[i].length; j++) {
         const x =
           this.level.startX + j * (this.level.BrickWidth + this.level.gap);
         const y =
@@ -61,8 +57,8 @@ class LevelEditor {
 
         return;
       }
-      for (let i = 0; i < this.levelEditor.length; i++) {
-        for (let j = 0; j < this.levelEditor[i].length; j++) {
+      for (let i = 0; i < this.levelEditorbrick.length; i++) {
+        for (let j = 0; j < this.levelEditorbrick[i].length; j++) {
           const brickX =
             this.level.startX + j * (this.level.BrickWidth + this.level.gap);
           const brickY =
@@ -73,7 +69,7 @@ class LevelEditor {
             y > brickY &&
             y < brickY + this.level.BrickHeight
           ) {
-            this.levelEditor[i][j] = this.selectedBrickType;
+            this.levelEditorbrick[i][j] = this.selectedBrickType;
             this.bricks[i][j].type = this.selectedBrickType;
             this.ctx.clearRect(
               0,
@@ -108,9 +104,18 @@ class LevelEditor {
         y < this.savebutton.y + this.savebutton.height
       ) {
         this.saveCLick = true;
-        localStorage.setItem("levelData", JSON.stringify(this.levelEditor));
-        this.start();
+        // debugger;
+        const data = JSON.parse(localStorage.getItem("levelData")) || [];
+        // debugger;
+        data.push(this.levelEditorbrick);
+        const addedlevels = localStorage.setItem(
+          "levelData",
+          JSON.stringify(data)
+        );
 
+        console.log(data.length);
+        this.start();
+        // this.levelEditor.push(addedlevels);
         setTimeout(() => {
           this.saveCLick = false;
           this.start();
@@ -125,8 +130,8 @@ class LevelEditor {
     this.ctx.fill();
   }
   drawLevel() {
-    for (let i = 0; i < this.levelEditor.length; i++) {
-      for (let j = 0; j < this.levelEditor[i].length; j++) {
+    for (let i = 0; i < this.levelEditorbrick.length; i++) {
+      for (let j = 0; j < this.levelEditorbrick[i].length; j++) {
         this.bricks[i][j].draw();
       }
     }
