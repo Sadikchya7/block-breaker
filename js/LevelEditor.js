@@ -1,6 +1,5 @@
 class LevelEditor {
   constructor(container, context, level, game) {
-    // this.bricks = bricks;
     this.radii = 10;
     this.state = "levelEditor";
     this.container = container;
@@ -19,7 +18,6 @@ class LevelEditor {
 
       [0, 0, 0, 0, 0],
     ];
-
     this.bricks = [];
     this.saveCLick = false;
     for (let i = 0; i < this.levelEditorbrick.length; i++) {
@@ -54,6 +52,10 @@ class LevelEditor {
         y < this.exitbutton.y + this.exitbutton.height
       ) {
         this.game.state = "levelPage";
+        this.ctx.clearRect(0, 0, this.container.width, this.container.height);
+        this.resetBrick();
+        this.drawLevel();
+        // this.start();
 
         return;
       }
@@ -104,18 +106,10 @@ class LevelEditor {
         y < this.savebutton.y + this.savebutton.height
       ) {
         this.saveCLick = true;
-        // debugger;
-        const data = JSON.parse(localStorage.getItem("levelData")) || [];
-        // debugger;
-        data.push(this.levelEditorbrick);
-        const addedlevels = localStorage.setItem(
-          "levelData",
-          JSON.stringify(data)
-        );
-
-        console.log(data.length);
+        this.data = JSON.parse(localStorage.getItem("levelData")) || [];
+        this.data.push(this.levelEditorbrick);
+        localStorage.setItem("levelData", JSON.stringify(this.data));
         this.start();
-        // this.levelEditor.push(addedlevels);
         setTimeout(() => {
           this.saveCLick = false;
           this.start();
@@ -129,6 +123,18 @@ class LevelEditor {
     this.ctx.fillStyle = this.bgColor;
     this.ctx.fill();
   }
+  resetBrick() {
+    console.log(this.levelEditorbrick);
+    this.levelEditorbrick = [];
+    for (let i = 0; i < 5; i++) {
+      const row = [];
+      for (let j = 0; j < 5; j++) {
+        row.push(0);
+      }
+      this.levelEditorbrick.push(row);
+    }
+  }
+
   drawLevel() {
     for (let i = 0; i < this.levelEditorbrick.length; i++) {
       for (let j = 0; j < this.levelEditorbrick[i].length; j++) {

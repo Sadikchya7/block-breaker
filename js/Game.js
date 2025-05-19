@@ -21,10 +21,10 @@ class Game {
       [2, 3, 4, 1, 2],
       [3, 4, 1, 2, 3],
     ];
-
+    this.savedlevel = JSON.parse(localStorage.getItem("levelData")) || [];
     this.levels = [level1, level2];
     this.level = new Level(this.ctx, this.levels[this.currentLevel]);
-    this.editor = null;
+    this.editor = new LevelEditor(this.container, this.ctx, this.level, this);
     this.ball = new Ball(
       this.ctx,
       15,
@@ -62,25 +62,18 @@ class Game {
         }
       }
       if (this.state === "levelPage") {
-        if (
-          this.levelSavedButton &&
-          x > this.levelSavedButton.x &&
-          x < this.levelSavedButton.x + this.levelSavedButton.width &&
-          y > this.levelSavedButton.y &&
-          y < this.levelSavedButton.y + this.levelSavedButton.height
-        ) {
-          this.state = "playing_1";
-          const savedLevel = localStorage.getItem("levelData");
-          for (let i = 0; i < savedLevel.length; i++) {
-            if (savedLevel) {
-              const levelSaved = JSON.parse(savedLevel);
-              // this.yourLevel = new YourLevelPlay(
-              //   this.ctx,
-              //   levelSaved,
-              //   this.level
-              // );
-              this.level = new Level(this.ctx, levelSaved[i]);
-              // this.start();
+        for (let i = 0; i < this.savedlevel.length; i++) {
+          const button = this.savedButton[i];
+          if (
+            button &&
+            x > button.x &&
+            x < button.x + button.width &&
+            y > button.y &&
+            y < button.y + button.height
+          ) {
+            this.state = "playing_1";
+            if (this.savedlevel) {
+              this.level = new Level(this.ctx, this.savedlevel[i]);
             }
           }
         }
@@ -93,12 +86,13 @@ class Game {
           y < this.levelEditorButton.y + this.levelEditorButton.height
         ) {
           this.state = "levelEditor";
-          this.editor = new LevelEditor(
-            this.container,
-            this.ctx,
-            this.level,
-            this
-          );
+          this.editor.resetBrick();
+          // this.editor = new LevelEditor(
+          //   this.container,
+          //   this.ctx,
+          //   this.level,
+          //   this
+          // );
         }
         if (
           this.exitbutton &&
@@ -183,7 +177,6 @@ class Game {
           this.paddle.moveRight(this.width);
           break;
         default:
-          // console.log(this.state);
           if (this.state === "playing_1") {
             this.state = "start";
           }
@@ -266,6 +259,7 @@ class Game {
 
   levelPage(message = "LEVELS", x = 100, y = 50) {
     this.state = "levelPage";
+
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.ctx.fillStyle = "#1A1A1A";
     this.ctx.fillRect(0, 0, this.width, this.height);
@@ -343,63 +337,40 @@ class Game {
     this.ctx.fillStyle = "#F0E68C";
     this.ctx.fillText("YOUR LEVELS", this.X, this.Y);
 
-    // Saved Level
-    const SavedLevel = [];
-    // const SavedIndex = this.levels.length;
+    //SAVEDLEVELS
+    this.savedButton = [];
     const SavedBoxWidth = 50;
     const SavedBoxHeight = 40;
-    const SavedX = x + (SavedBoxWidth - boxWidth);
-    const SavedY = LevelIndexStartY + 140;
-    this.levelSavedButton = {
-      x: SavedX - SavedBoxWidth / 2,
-      y: SavedY - SavedBoxHeight / 2 + 4,
-      width: SavedBoxWidth,
-      height: SavedBoxHeight,
-    };
-    this.ctx.fillStyle = "#FF6347";
-    this.ctx.fillRect(
-      this.levelSavedButton.x,
-      this.levelSavedButton.y,
-      SavedBoxWidth,
-      SavedBoxHeight
-    );
-    // console.log(this.editor.data);
+    this.savedlevel = JSON.parse(localStorage.getItem("levelData")) || [];
+    const startX = 100;
+    const startY = LevelIndexStartY + 140;
+    for (let i = 0; i < this.savedlevel.length; i++) {
+      let SavedX = startX + (i % 7) * (boxWidth + gap);
+      let SavedY = startY + Math.floor(i / 7) * 50;
 
-    this.ctx.fillStyle = "#FFFFFF";
-    this.ctx.font = "20px Arial";
-    this.ctx.textAlign = "center";
-    this.ctx.textBaseline = "middle";
-    this.ctx.fillText("S", SavedX, SavedY + 4);
+      this.levelSavedButton = {
+        x: SavedX - SavedBoxWidth / 2,
+        y: SavedY - SavedBoxHeight / 2 + 4,
+        width: SavedBoxWidth,
+        height: SavedBoxHeight,
+        level: i + 1,
+      };
 
-    // const SavedBoxWidth = 50;
-    // const SavedBoxHeight = 40;
-    // const savedLevel = localStorage.getItem("levelData");
-
-    // for (let i = 0; i < savedLevel.length; i++) {
-    //   const SavedX = x + i * (boxWidth + gap);
-    //   const SavedY = LevelIndexStartY + 140;
-
-    //   this.levelSavedButton = {
-    //     x: SavedX - SavedBoxWidth / 2,
-    //     y: SavedY - SavedBoxHeight / 2 + 4,
-    //     width: SavedBoxWidth,
-    //     height: SavedBoxHeight,
-    //     level: i + 1,
-    //   };
-    //   this.ctx.fillStyle = "#FF6347";
-    //   this.ctx.fillRect(
-    //     this.levelSavedButton.x,
-    //     this.levelSavedButton.y,
-    //     SavedBoxWidth,
-    //     SavedBoxHeight
-    //   );
-    //   this.ctx.fillStyle = "#FFFFFF";
-    //   this.ctx.font = "20px Arial";
-    //   this.ctx.textAlign = "center";
-    //   this.ctx.textBaseline = "middle";
-    //   this.ctx.fillText(this.levelSavedButton.level, SavedX, SavedY + 4);
-    // }
-    // // LEVEL EDITOR
+      this.savedButton.push(this.levelSavedButton);
+      this.ctx.fillStyle = "#FF6347";
+      this.ctx.fillRect(
+        this.levelSavedButton.x,
+        this.levelSavedButton.y,
+        SavedBoxWidth,
+        SavedBoxHeight
+      );
+      this.ctx.fillStyle = "#FFFFFF";
+      this.ctx.font = "20px Arial";
+      this.ctx.textAlign = "center";
+      this.ctx.textBaseline = "middle";
+      this.ctx.fillText(this.levelSavedButton.level, SavedX, SavedY + 4);
+    }
+    // LEVEL EDITOR
 
     const editorBoxWidth = 200;
     const editorBoxHeight = 40;
@@ -436,11 +407,9 @@ class Game {
     } else if (this.state === "start") {
       this.update();
       this.updateView();
-      // this.nextLevel();
     } else if (this.state === "playing_1") {
       this.update();
       this.updateView();
-      // this.nextLevel();
     } else if (this.state === "reset") {
       this.state = "playing_1";
       this.ball.reset(this.paddle);
@@ -463,6 +432,7 @@ class Game {
       return;
     } else if (this.state === "levelEditor") {
       this.editor.start();
+
       return;
     } else if (this.state === "start") {
       this.ball.attached = false;
@@ -493,7 +463,6 @@ class Game {
       }
 
       if (allBricksCleared) {
-        // console.log(allBricksCleared);
         this.ctx.clearRect(0, 0, this.width, this.height);
         this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
         this.ctx.fillRect(0, 0, this.width, this.height);
@@ -630,9 +599,6 @@ class Game {
   nextLevel() {
     this.currentLevel++;
     if (this.levels.length < this.currentLevel) {
-      // debugger;
-      console.log(this.currentLevel);
-      console.log(this.levels.length);
       this.ctx.clearRect(0, 0, this.width, this.height);
       this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
       this.ctx.fillRect(0, 0, this.width, this.height);
@@ -649,7 +615,6 @@ class Game {
           (allBricksCleared && this.currentLevel < this.levels.length)
         ) {
           setTimeout(() => {
-            // ;
             if (this.currentLevel < this.levels.length) {
               this.level = new Level(this.ctx, this.levels[this.currentLevel]);
               this.speed += 10;

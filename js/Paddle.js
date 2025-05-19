@@ -15,9 +15,6 @@ class Paddle {
     this.ctx.fillStyle = this.color;
     this.ctx.roundRect(this.x, this.y, this.width, this.height, [0, 0, 60, 60]);
     this.ctx.fill();
-    // this.ctx.strokeStyle = "grey";
-    // this.ctx.lineWidth = 5;
-    // this.ctx.strokeRect(this.x, this.y, /this.width, this.height);
   }
 
   update(gameWidth) {
@@ -26,7 +23,6 @@ class Paddle {
   }
 
   moveRight() {
-    // ;
     this.x += this.speed;
     if (this.ball.attached) {
       this.ball.attachToPaddle(this);
@@ -34,7 +30,6 @@ class Paddle {
   }
 
   moveLeft() {
-    // console.log("left");
     this.x -= this.speed;
     if (this.ball.attached) {
       this.ball.attachToPaddle(this);

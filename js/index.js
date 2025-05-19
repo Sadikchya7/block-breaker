@@ -18,7 +18,6 @@ let game = new Game(
 let gameID = null;
 
 function gameLoop() {
-  //onsole.log(firstDiv.height);
   game.start();
 
   requestAnimationFrame(gameLoop);
