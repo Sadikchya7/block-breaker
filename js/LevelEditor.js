@@ -44,35 +44,56 @@ class LevelEditor {
     this.container.addEventListener("click", (event) => {
       const x = event.clientX - this.container.offsetLeft;
       const y = event.clientY - this.container.offsetTop;
-      if (
-        this.exitbutton &&
-        x > this.exitbutton.x &&
-        x < this.exitbutton.x + this.exitbutton.width &&
-        y > this.exitbutton.y &&
-        y < this.exitbutton.y + this.exitbutton.height
-      ) {
-        this.game.state = "levelPage";
-        this.ctx.clearRect(0, 0, this.container.width, this.container.height);
-        this.resetBrick();
-        this.drawLevel();
-        // this.start();
+      if (this.game.state === "levelEditor") {
+        if (
+          this.exitbutton &&
+          x > this.exitbutton.x &&
+          x < this.exitbutton.x + this.exitbutton.width &&
+          y > this.exitbutton.y &&
+          y < this.exitbutton.y + this.exitbutton.height
+        ) {
+          this.game.state = "levelPage";
+          this.ctx.clearRect(0, 0, this.container.width, this.container.height);
+          this.resetBrick();
 
-        return;
-      }
-      for (let i = 0; i < this.levelEditorbrick.length; i++) {
-        for (let j = 0; j < this.levelEditorbrick[i].length; j++) {
-          const brickX =
-            this.level.startX + j * (this.level.BrickWidth + this.level.gap);
-          const brickY =
-            this.level.startY + i * (this.level.BrickHeight + this.level.gap);
+          // this.start();
+
+          return;
+        }
+        for (let i = 0; i < this.levelEditorbrick.length; i++) {
+          for (let j = 0; j < this.levelEditorbrick[i].length; j++) {
+            const brickX =
+              this.level.startX + j * (this.level.BrickWidth + this.level.gap);
+            const brickY =
+              this.level.startY + i * (this.level.BrickHeight + this.level.gap);
+            if (
+              x > brickX &&
+              x < brickX + this.level.BrickWidth &&
+              y > brickY &&
+              y < brickY + this.level.BrickHeight
+            ) {
+              this.levelEditorbrick[i][j] = this.selectedBrickType;
+              this.bricks[i][j].type = this.selectedBrickType;
+              this.ctx.clearRect(
+                0,
+                0,
+                this.container.width,
+                this.container.height
+              );
+              this.start();
+              return;
+            }
+          }
+        }
+        for (let i = 0; i < this.selectorButtons.length; i++) {
+          const button = this.selectorButtons[i];
           if (
-            x > brickX &&
-            x < brickX + this.level.BrickWidth &&
-            y > brickY &&
-            y < brickY + this.level.BrickHeight
+            x > button.x &&
+            x < button.x + button.width &&
+            y > button.y &&
+            y < button.y + button.height
           ) {
-            this.levelEditorbrick[i][j] = this.selectedBrickType;
-            this.bricks[i][j].type = this.selectedBrickType;
+            this.selectedBrickType = button.type;
             this.ctx.clearRect(
               0,
               0,
@@ -80,40 +101,26 @@ class LevelEditor {
               this.container.height
             );
             this.start();
-            return;
           }
         }
-      }
-      for (let i = 0; i < this.selectorButtons.length; i++) {
-        const button = this.selectorButtons[i];
-        if (
-          x > button.x &&
-          x < button.x + button.width &&
-          y > button.y &&
-          y < button.y + button.height
-        ) {
-          this.selectedBrickType = button.type;
-          this.ctx.clearRect(0, 0, this.container.width, this.container.height);
-          this.start();
-        }
-      }
 
-      if (
-        this.savebutton &&
-        x > this.savebutton.x &&
-        x < this.savebutton.x + this.savebutton.width &&
-        y > this.savebutton.y &&
-        y < this.savebutton.y + this.savebutton.height
-      ) {
-        this.saveCLick = true;
-        this.data = JSON.parse(localStorage.getItem("levelData")) || [];
-        this.data.push(this.levelEditorbrick);
-        localStorage.setItem("levelData", JSON.stringify(this.data));
-        this.start();
-        setTimeout(() => {
-          this.saveCLick = false;
+        if (
+          this.savebutton &&
+          x > this.savebutton.x &&
+          x < this.savebutton.x + this.savebutton.width &&
+          y > this.savebutton.y &&
+          y < this.savebutton.y + this.savebutton.height
+        ) {
+          this.saveCLick = true;
+          this.data = JSON.parse(localStorage.getItem("levelData")) || [];
+          this.data.push(this.levelEditorbrick);
+          localStorage.setItem("levelData", JSON.stringify(this.data));
           this.start();
-        }, 50);
+          setTimeout(() => {
+            this.saveCLick = false;
+            this.start();
+          }, 50);
+        }
       }
     });
   }
@@ -132,6 +139,22 @@ class LevelEditor {
         row.push(0);
       }
       this.levelEditorbrick.push(row);
+    }
+
+    this.bricks = [];
+
+    for (let i = 0; i < this.levelEditorbrick.length; i++) {
+      let brickRow = [];
+      for (let j = 0; j < this.levelEditorbrick[i].length; j++) {
+        const x =
+          this.level.startX + j * (this.level.BrickWidth + this.level.gap);
+        const y =
+          this.level.startY + i * (this.level.BrickHeight + this.level.gap);
+        const width = this.level.BrickWidth;
+        const height = this.level.BrickHeight;
+        brickRow.push(new Brick(this.ctx, height, width, x, y));
+      }
+      this.bricks.push(brickRow);
     }
   }
 

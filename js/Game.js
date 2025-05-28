@@ -7,14 +7,14 @@ class Game {
     this.width = width;
     this.currentLevel = 0;
     this.playing = false;
-    this.speed = 4;
+    this.speed = 5;
     this.lives = 3;
     this.state = "menuPage";
     const level1 = [
       [4, 4, 4, 4, 4],
-      [3, 3, 3, 3, 3],
-      [2, 2, 2, 2, 2],
-      [1, 1, 1, 1, 1],
+      // [3, 3, 3, 3, 3],
+      // [2, 2, 2, 2, 2],
+      // [1, 1, 1, 1, 1],
     ];
     const level2 = [
       [1, 2, 3, 4, 1],
@@ -50,6 +50,8 @@ class Game {
           y > this.playButton.y &&
           y < this.playButton.y + this.playButton.height
         ) {
+          this.currentLevel = 0;
+          this.level = new Level(this.ctx, this.levels[this.currentLevel]);
           this.state = "playing_1";
         }
         if (
@@ -71,10 +73,13 @@ class Game {
             y > button.y &&
             y < button.y + button.height
           ) {
-            this.state = "playing_1";
-            if (this.savedlevel) {
-              this.level = new Level(this.ctx, this.savedlevel[i]);
-            }
+            this.currentLevel = i;
+            this.level = new Level(
+              this.ctx,
+              this.savedlevel[this.currentLevel]
+            );
+            // console.log(this.savedlevel[this.currentLevel]);
+            this.state = "SavedLevel";
           }
         }
 
@@ -85,8 +90,8 @@ class Game {
           y > this.levelEditorButton.y &&
           y < this.levelEditorButton.y + this.levelEditorButton.height
         ) {
-          this.state = "levelEditor";
           this.editor.resetBrick();
+          this.state = "levelEditor";
           // this.editor = new LevelEditor(
           //   this.container,
           //   this.ctx,
@@ -111,7 +116,9 @@ class Game {
             y > button.y &&
             y < button.y + button.height
           ) {
-            this.level = new Level(this.ctx, this.levels[i]);
+            this.currentLevel = i;
+            // this.levels = [level1,]
+            this.level = new Level(this.ctx, this.levels[this.currentLevel]);
             this.state = "playing_1";
             break;
           }
@@ -121,7 +128,8 @@ class Game {
       if (
         this.state === "playing_1" ||
         this.state === "pause" ||
-        this.state === "start"
+        this.state === "start" ||
+        this.state === "SavedLevel"
       ) {
         if (
           this.pausebutton &&
@@ -153,9 +161,13 @@ class Game {
           y > this.nextbutton.y &&
           y < this.nextbutton.y + this.nextbutton.height
         ) {
+          // debugger;
+          if (this.state === "SavedLevel") {
+            this.nextLevel();
+            return;
+          }
           this.state = "next";
-
-          this.nextLevel();
+          console.log("clicked");
         }
       }
     });
@@ -176,8 +188,12 @@ class Game {
         case "ArrowRight":
           this.paddle.moveRight(this.width);
           break;
+        case "Escape":
+          this.state = "menuPage";
+          this.lives = 3;
+          break;
         default:
-          if (this.state === "playing_1") {
+          if (this.state === "playing_1" || this.state === "SavedLevel") {
             this.state = "start";
           }
           if (this.state === "gameOver") {
@@ -186,13 +202,6 @@ class Game {
             this.state = "menuPage";
             this.menuPage();
           }
-      }
-
-      if (key == "Escape") {
-        this.currentLevel = 0;
-        this.state = "reset";
-        this.updateView();
-        this.state = "menuPage";
       }
     });
   }
@@ -411,19 +420,17 @@ class Game {
       this.update();
       this.updateView();
     } else if (this.state === "reset") {
-      this.state = "playing_1";
-      this.ball.reset(this.paddle);
-      this.score.value = 0;
-      this.lives = 3;
-      this.level = new Level(this.ctx, this.levels[this.currentLevel]);
+      this.updateView();
     } else if (this.state === "levelEditor") {
       this.update();
       this.updateView();
     } else if (this.state === "levelPage") {
       this.levelPage();
-    }
-    if (this.state === "SavedLevel") {
-      this.yourLevel.draw();
+    } else if (this.state === "next") {
+      this.update();
+    } else if (this.state === "SavedLevel") {
+      this.update();
+      this.updateView();
     }
   }
 
@@ -433,6 +440,10 @@ class Game {
     } else if (this.state === "levelEditor") {
       this.editor.start();
 
+      return;
+    } else if (this.state === "next") {
+      // this.currentLevel++;
+      this.nextLevel();
       return;
     } else if (this.state === "start") {
       this.ball.attached = false;
@@ -448,32 +459,13 @@ class Game {
         }
       }
       this.ball.checkCollisionWithPaddle(this.paddle);
-    } else if (this.state === "SavedLevel") {
     }
-    let allBricksCleared = true;
-    if (this.state === "playing_1") {
-      for (let i = 0; i < this.level.bricks.length; i++) {
-        for (let j = 0; j < this.level.bricks[i].length; j++) {
-          if (this.level.bricks[i][j].show === true) {
-            allBricksCleared = false;
-            break;
-          }
-        }
-        if (!allBricksCleared) break;
-      }
 
-      if (allBricksCleared) {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-        this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-        this.ctx.fillRect(0, 0, this.width, this.height);
-        this.ctx.fillStyle = "white";
-        this.ctx.font = "50px Arial";
-        this.ctx.textAlign = "center";
-        this.ctx.textBaseline = "middle";
-        this.ctx.fillText("Next Level", this.width / 2, this.height / 2);
-        this.state = "next";
-        this.nextLevel();
-      }
+    if (this.state === "SavedLevel") {
+      this.levelDraw();
+    }
+    if (this.state === "playing_1") {
+      this.levelDraw();
     }
     if (this.state === "gameOver") {
       this.score.draw(
@@ -495,7 +487,34 @@ class Game {
     );
     this.paddle.update(this.width);
   }
+  levelDraw() {
+    let allBricksCleared = true;
+    for (let i = 0; i < this.level.bricks.length; i++) {
+      for (let j = 0; j < this.level.bricks[i].length; j++) {
+        if (this.level.bricks[i][j].show === true) {
+          allBricksCleared = false;
+          break;
+        }
+      }
+      if (!allBricksCleared) break;
+    }
 
+    if (allBricksCleared) {
+      debugger;
+      console.log(this.state);
+      this.ctx.clearRect(0, 0, this.width, this.height);
+      this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+      this.ctx.fillRect(0, 0, this.width, this.height);
+      this.ctx.fillStyle = "white";
+      this.ctx.font = "50px Arial";
+      this.ctx.textAlign = "center";
+      this.ctx.textBaseline = "middle";
+      this.ctx.fillText("Next Level", this.width / 2, this.height / 2);
+      this.nextLevel();
+      // this.state = "next";
+      // this.nextLevel();
+    }
+  }
   updateView() {
     this.ctx.clearRect(0, 0, this.width, this.height);
     this.paddle.update(this.width);
@@ -521,6 +540,18 @@ class Game {
       this.lives = 3;
       return;
     }
+    if (this.state === "levelComplete") {
+      console.log(this.levels.length, "levelslenght");
+      console.log(this.currentLevel, "currentlenght");
+      this.ctx.clearRect(0, 0, this.width, this.height);
+      this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+      this.ctx.fillRect(0, 0, this.width, this.height);
+      this.ctx.fillStyle = "white";
+      this.ctx.font = "50px Arial";
+      this.ctx.textAlign = "center";
+      this.ctx.textBaseline = "middle";
+      this.ctx.fillText("LEVEL COMPLETED", this.width / 2, this.height / 2);
+    }
     if (this.state === "pause") {
       this.pauseButton(this.width - 162.5, 7.5, "play");
       this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
@@ -542,12 +573,16 @@ class Game {
       return;
     }
     if (this.state === "reset") {
+      if (this.savedlevel) {
+        this.level = new Level(this.ctx, this.savedlevel[this.currentLevel]);
+        // }
+      } else {
+        this.level = new Level(this.ctx, this.levels[this.currentLevel]);
+      }
       this.state = "playing_1";
       this.ball.reset(this.paddle);
       this.lives = 3;
       this.score.value = 0;
-
-      this.level = new Level(this.ctx, this.levels[this.currentLevel]);
       return;
     }
     if (this.ball.y - this.ball.radius > this.height) {
@@ -595,39 +630,79 @@ class Game {
       "ivory"
     );
   }
-
   nextLevel() {
-    this.currentLevel++;
-    if (this.levels.length < this.currentLevel) {
-      this.ctx.clearRect(0, 0, this.width, this.height);
-      this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-      this.ctx.fillRect(0, 0, this.width, this.height);
-      this.ctx.fillStyle = "white";
-      this.ctx.font = "50px Arial";
-      this.ctx.textAlign = "center";
-      this.ctx.textBaseline = "middle";
-      this.ctx.fillText("LEVEL COMPLETED", this.width / 2, this.height / 2);
-    }
-    for (let i = 0; i < this.level.bricks.length; i++) {
-      for (let j = 0; j < this.level.bricks[i].length; j++) {
-        if (
-          this.state === "next" ||
-          (allBricksCleared && this.currentLevel < this.levels.length)
-        ) {
-          setTimeout(() => {
-            if (this.currentLevel < this.levels.length) {
-              this.level = new Level(this.ctx, this.levels[this.currentLevel]);
-              this.speed += 10;
-
-              this.ball.reset(this.paddle);
-
-              this.state = "playing_1";
-            }
-          }, 1000);
+    if (this.state === "SavedLevel") {
+      debugger;
+      for (let i = 0; i < this.savedlevel.length; i++) {
+        console.log("hello");
+        // debugger;
+        this.currentLevel++;
+        if (this.savedlevel.length === this.currentLevel) {
+          this.state = "levelComplete";
+          this.updateView();
+          return;
         }
+        console.log(this.currentLevel, "after");
+        this.level = new Level(this.ctx, this.savedlevel[this.currentLevel]);
+        this.state = "SavedLevel";
+        return;
       }
     }
-  }
+    if (this.state === "next") {
+      // debugger;
+      // console.log(this.currentLevel, "before");
+      //  else {
+      for (let i = 0; i < this.levels.length; i++) {
+        this.currentLevel++;
+        if (this.levels.length === this.currentLevel) {
+          this.state = "levelComplete";
+          this.updateView();
+          return;
+        }
+        this.level = new Level(this.ctx, this.levels[this.currentLevel]);
+        this.state = "playing_1";
+        return;
+      }
+      // }
+    }
+  } // nextLevel() {
+  //   // this.currentLevel += 1;
+  //   // if (this.savedlevel) {
+  //   //   this.currentLevel++;
+
+  //   // }
+  //   if (this.levels.length > this.currentLevel) {
+  //     console.log(this.levels.length, "levelslenght");
+  //     console.log(this.currentLevel, "currentlenght");
+  //     this.ctx.clearRect(0, 0, this.width, this.height);
+  //     this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+  //     this.ctx.fillRect(0, 0, this.width, this.height);
+  //     this.ctx.fillStyle = "white";
+  //     this.ctx.font = "50px Arial";
+  //     this.ctx.textAlign = "center";
+  //     this.ctx.textBaseline = "middle";
+  //     this.ctx.fillText("LEVEL COMPLETED", this.width / 2, this.height / 2);
+  //   }
+  //   for (let i = 0; i < this.level.bricks.length; i++) {
+  //     for (let j = 0; j < this.level.bricks[i].length; j++) {
+  //       if (
+  //         this.state === "next" ||
+  //         (allBricksCleared && this.currentLevel < this.levels.length)
+  //       ) {
+  //         setTimeout(() => {
+  //           if (this.currentLevel < this.levels.length) {
+  //             this.level = new Level(this.ctx, this.levels[this.currentLevel]);
+  //             // this.speed += 10;
+
+  //             this.ball.reset(this.paddle);
+
+  //             this.state = "playing_1";
+  //           }
+  //         }, 1000);
+  //       }
+  //     }
+  //   }
+  // }
 
   pauseButton(x = this.width - 162.5, y = 7.5, imgname = "pause") {
     const boxWidth = 40;

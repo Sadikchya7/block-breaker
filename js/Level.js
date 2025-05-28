@@ -6,6 +6,7 @@ class Level {
     this.BrickWidth = 100;
     this.startX = 50;
     this.startY = 50;
+
     this.gap = 3;
     this.bricks = this.createBricks(level);
   }
